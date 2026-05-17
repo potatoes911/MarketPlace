@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="Test.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f7f9fc;
+      color: #333;
+    }
+
+    .shadow-line {
+      border: none;
+      background-color: #006400;
+      height: 1px;
+      width: 100%;
+      box-shadow: 2px 6px 8px rgba(0, 0, 0, 0.6);
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    .hero-section {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+      gap: 40px;
+    }
+
+    .text-content {
+      flex: 1;
+      max-width: 550px;
+    }
+
+    .text-content h1 {
+      font-size: 42px;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+    }
+
+    .text-content p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background-color: #0061fe;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #043075;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background-color: #14b8e0;
+    }
+
+    .slideshow-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .slideshow-container {
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+      border: 5px solid #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      background-color: #000;
+    }
+
+    .mySlides {
+      display: none;
+    }
+
+    .mySlides img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Fade animation */
+    .fade {
+      animation-name: fade;
+      animation-duration: 1s;
+    }
+
+    @keyframes fade {
+      from { opacity: 0.4; }
+      to { opacity: 1; }
+    }
+
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 16px;
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      font-size: 18px;
+      transition: 0.3s ease;
+      background-color: rgba(0,0,0,0.3);
+      user-select: none;
+      text-decoration: none;
+    }
+
+    .next { right: 0; }
+    .prev { left: 0; }
+
+    .prev:hover, .next:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    @media (max-width: 900px) {
+      .hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+      }
+
+      .text-content {
+        max-width: 100%;
+      }
+
+      .buttons {
+        justify-content: center;
+      }
+
+      .slideshow-container {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <a href="index.html">
+    <img src="Images/Logo.png" width="80" height="66" alt="Button"/>
+  </a>
+  <a href="test.html">
+    <img src="Images/button_cars.png" width="150" height="66" alt="Button"/>
+  </a>
+  <a href="Companies.html">
+    <img src="Images/button_companies.png" width="220" height="66" alt="Button"/>
+  </a>
+  <a href="Comments.html">
+    <img src="Images/button_comments.png" width="220" height="66" alt="Button"/>
+  </a>
+  <a href="Videos.html">
+    <img src="Images/button_videos.png" width="200" height="66" alt="Button"/>
+  </a>
+
+  <hr class="shadow-line">
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="text-content">
+      <h1>One man's trash is another man's treasure.</h1>
+      <p>Explore a wide variety of tools, furniture and household items at unbeatable prices.</p>
+      <div class="buttons">
+        <a href="#" class="btn btn-primary">Start Browsing</a>
+        <a href="#" class="btn btn-secondary">Create Account ➔</a>
+      </div>
+    </div>
+
+    <div class="slideshow-wrapper">
+      <div class="slideshow-container">
+        <div class="mySlides fade">
+          <img src="Images/Forest1.png" alt="Slide 1">
+        </div>
+        <div class="mySlides fade">
+          <img src="Images/mower.jpg" alt="Slide 2">
+        </div>
+        <div class="mySlides fade">
+          <img src="Images/sofa1.png" alt="Slide 3">
+        </div>
+
+        <a class="prev" href="javascript:void(0)" onclick="plusSlides(-1)">❮</a>
+        <a class="next" href="javascript:void(0)" onclick="plusSlides(1)">❯</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let slideIndex = 0;
+    let slideTimer;
+
+    showSlides();
+    resetTimer();
+
+    function plusSlides(n) {
+      slideIndex += n;
+      showSlides();
+      resetTimer();
+    }
+
+    function showSlides() {
+      let slides = document.getElementsByClassName("mySlides");
+      if (slideIndex >= slides.length) { slideIndex = 0; }
+      if (slideIndex < 0) { slideIndex = slides.length - 1; }
+      for (let slide of slides) { slide.style.display = "none"; }
+      slides[slideIndex].style.display = "block";
+    }
+
+    function resetTimer() {
+      clearInterval(slideTimer);
+      slideTimer = setInterval(() => {
+        slideIndex++;
+        showSlides();
+      }, 4000);
+    }
+  </script>
+
+</body>
+</html>
