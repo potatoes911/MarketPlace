@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Polls</title>
+  <link rel="stylesheet" href="Test.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #f7f9fc;
+      color: #333;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    nav a img { height: clamp(40px, 5vw, 66px); width: auto; }
+
+    .shadow-line {
+      border: none;
+      background-color: #006400;
+      height: 2px;
+      width: 100%;
+      box-shadow: 2px 6px 8px rgba(0,0,0,0.6);
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .page-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 3vw, 34px);
+      color: #1a1a1a;
+    }
+    .page-header p {
+      font-size: 14px; color: #888; margin-top: 3px;
+    }
+
+    .btn-create-poll {
+      background: #006400; color: #fff; border: none;
+      border-radius: 10px; padding: 10px 22px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
+      font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-create-poll:hover { background: #004d00; }
+
+    /* ── Polls list ── */
+    .polls-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .poll-card {
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    }
+
+    .poll-header {
+      padding: 24px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .poll-question {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(17px, 2vw, 22px);
+      color: #1a1a1a;
+      flex: 1;
+    }
+    .poll-meta { font-size: 12px; color: #aaa; }
+    .poll-author { font-weight: 500; color: #555; }
+
+    .poll-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+      padding: 20px 28px;
+    }
+
+    .poll-option {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2.5px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      background: #f0f2f5;
+    }
+    .poll-option:hover:not(.voted) { border-color: #006400; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,100,0,0.12); }
+    .poll-option.selected { border-color: #006400; }
+    .poll-option.winner { border-color: #0061fe; }
+
+    .poll-option-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #e4e8ee;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 40px;
+      color: #c0c8d4;
+      overflow: hidden;
+    }
+    .poll-option-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .poll-option-label {
+      padding: 10px 14px 6px;
+      font-weight: 500;
+      font-size: 14px;
+      color: #1a1a1a;
+    }
+
+    .poll-option-bar-wrap {
+      padding: 0 14px 12px;
+    }
+    .poll-option-bar-bg {
+      background: #eee;
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+    }
+    .poll-option-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: #006400;
+      transition: width 0.5s ease;
+    }
+    .poll-option-bar-fill.winner-bar { background: #0061fe; }
+    .poll-option-votes {
+      font-size: 12px; color: #888; margin-top: 4px;
+    }
+
+    .vote-check {
+      position: absolute; top: 8px; right: 8px;
+      background: #006400; color: #fff;
+      border-radius: 50%; width: 24px; height: 24px;
+      display: none; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: bold;
+    }
+    .poll-option.selected .vote-check { display: flex; }
+
+    .poll-footer {
+      padding: 0 28px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .total-votes { font-size: 13px; color: #aaa; }
+    .voted-msg { font-size: 13px; color: #006400; font-weight: 500; }
+
+    /* ── Poll comments ── */
+    .poll-comments {
+      border-top: 1px solid #eee;
+      padding: 20px 28px 24px;
+    }
+    .poll-comments h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px; color: #1a1a1a; margin-bottom: 14px;
+    }
+    .poll-comments .toggle-comments {
+      background: none; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: 13px;
+      color: #006400; cursor: pointer; padding: 0;
+      text-decoration: underline; margin-bottom: 14px;
+      display: block;
+    }
+    .comment-input-row {
+      display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .comment-input-row input, .comment-input-row textarea {
+      border: 1.5px solid #dde2ea; border-radius: 8px;
+      padding: 9px 13px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; outline: none; transition: border-color 0.2s; color: #333;
+    }
+    .comment-input-row input:focus, .comment-input-row textarea:focus { border-color: #006400; }
+    .cmt-name { width: 130px; flex-shrink: 0; }
+    .cmt-text { flex: 1; resize: none; min-width: 150px; height: 40px; }
+    .cmt-submit {
+      background: #006400; color: #fff; border: none;
+      border-radius: 8px; padding: 9px 16px;
+      font-size: 13px; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; white-space: nowrap; transition: background 0.2s;
+    }
+    .cmt-submit:hover { background: #004d00; }
+
+    .comments-list-poll { display: flex; flex-direction: column; gap: 10px; max-height: 220px; overflow-y: auto; }
+    .comment-item {
+      background: #f7f9fc; border-radius: 10px;
+      padding: 11px 14px; border-left: 3px solid #006400;
+    }
+    .comment-author { font-weight: 500; font-size: 13px; color: #1a1a1a; }
+    .comment-time { font-size: 11px; color: #aaa; margin-left: 8px; }
+    .comment-text { font-size: 13px; color: #555; margin-top: 4px; line-height: 1.5; }
+    .no-comments { font-size: 13px; color: #bbb; text-align: center; padding: 12px 0; }
+
+    /* ── Create Poll Modal ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal {
+      background: #fff; border-radius: 18px;
+      max-width: 600px; width: 100%;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      animation: slideUp 0.25s ease;
+      max-height: 90vh; overflow-y: auto;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .poll-form { padding: 28px 32px 32px; display: flex; flex-direction: column; gap: 18px; }
+    .poll-form h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: #1a1a1a; }
+    .poll-form p.sub { font-size: 13px; color: #888; margin-top: -12px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 11px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #888;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      border: 1.5px solid #dde2ea; border-radius: 10px;
+      padding: 11px 14px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; outline: none; transition: border-color 0.2s; color: #333;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: #006400; }
+
+    .options-builder { display: flex; flex-direction: column; gap: 10px; }
+    .option-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .option-row input {
+      flex: 1; border: 1.5px solid #dde2ea; border-radius: 10px;
+      padding: 10px 14px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; outline: none; transition: border-color 0.2s; color: #333;
+    }
+    .option-row input:focus { border-color: #006400; }
+    .remove-option {
+      background: #fee; color: #c00; border: none;
+      border-radius: 6px; padding: 6px 10px;
+      cursor: pointer; font-size: 14px;
+    }
+    .add-option-btn {
+      background: none; border: 1.5px dashed #ccc;
+      border-radius: 10px; padding: 10px;
+      color: #888; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; cursor: pointer; transition: border-color 0.2s;
+    }
+    .add-option-btn:hover { border-color: #006400; color: #006400; }
+
+    .modal-footer { display: flex; gap: 12px; }
+    .btn-post-poll {
+      flex: 1; background: #1a1a1a; color: #fff; border: none;
+      border-radius: 12px; padding: 14px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn-post-poll:hover { background: #333; }
+    .btn-cancel {
+      background: transparent; color: #666;
+      border: 1.5px solid #dde2ea; border-radius: 12px;
+      padding: 14px 22px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; cursor: pointer; transition: border-color 0.2s;
+    }
+    .btn-cancel:hover { border-color: #aaa; }
+
+    .no-polls {
+      text-align: center; padding: 80px 20px;
+      color: #aaa; font-size: 16px;
+    }
+
+    @media (max-width: 700px) {
+      .page-header, .polls-container { padding-left: 20px; padding-right: 20px; }
+      .poll-options { grid-template-columns: 1fr 1fr; padding: 16px 20px; }
+      .poll-header, .poll-footer, .poll-comments { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="index.html"><img src="Images/Logo.png" alt="Logo"/></a>
+    <a href="Market.html"><img src="Images/button_cars.png" alt="Cars"/></a>
+    <a href="ListItem.html"><img src="Images/button_companies.png" alt="Companies"/></a>
+    <a href="Comments.html"><img src="Images/button_comments.png" alt="Comments"/></a>
+    <a href="Videos.html"><img src="Images/button_videos.png" alt="Videos"/></a>
+    <a href="Polls.html"><img src="Images/button_comments.png" alt="Polls"/></a>
+  </nav>
+  <hr class="shadow-line">
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <h2>Community Polls</h2>
+      <p>Vote on what items the community wants most</p>
+    </div>
+    <button class="btn-create-poll" onclick="openCreatePoll()">＋ Create Poll</button>
+  </div>
+
+  <!-- Polls container -->
+  <div class="polls-container" id="pollsContainer">
+    <div class="no-polls">No polls yet — create the first one!</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       CREATE POLL MODAL
+  ══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="createPollModal" onclick="closeOnOverlay(event,'createPollModal')">
+    <div class="modal">
+      <div class="poll-form">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <h2>Create a Poll</h2>
+            <p class="sub">Ask your community what they want.</p>
+          </div>
+          <button style="background:#eee;color:#555;border:none;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;" onclick="closeModal('createPollModal')">✕</button>
+        </div>
+
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="pf-name" placeholder="e.g. Alex Smith">
+        </div>
+
+        <div class="form-group">
+          <label>Poll Question</label>
+          <input type="text" id="pf-question" placeholder="e.g. What appliance should we stock next?">
+        </div>
+
+        <div class="form-group">
+          <label>Options (2–6 choices)</label>
+          <div class="options-builder" id="optionsBuilder">
+            <div class="option-row">
+              <input type="text" placeholder="Option 1 (e.g. Stand Mixer)" class="opt-label">
+            </div>
+            <div class="option-row">
+              <input type="text" placeholder="Option 2 (e.g. Air Fryer)" class="opt-label">
+              <button class="remove-option" onclick="removeOption(this)">✕</button>
+            </div>
+          </div>
+          <button class="add-option-btn" onclick="addOption()">＋ Add another option</button>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-cancel" onclick="closeModal('createPollModal')">Cancel</button>
+          <button class="btn-post-poll" onclick="submitPoll()">POST POLL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────
+    let polls = JSON.parse(localStorage.getItem('cp_polls') || '[]');
+    let pollVotes = JSON.parse(localStorage.getItem('cp_votes') || '{}');
+    let pollComments = JSON.parse(localStorage.getItem('cp_poll_comments') || '{}');
+
+    // Seed default poll if empty
+    if (polls.length === 0) {
+      polls.push({
+        id: 'seed_1',
+        question: 'What appliance/furniture should the marketplace stock next?',
+        author: 'Admin',
+        date: new Date().toLocaleDateString('en-AU'),
+        options: [
+          { id: 'o1', label: 'Stand Mixer', emoji: '🍳' },
+          { id: 'o2', label: 'Air Fryer', emoji: '🍟' },
+          { id: 'o3', label: 'Sofa Set', emoji: '🛋️' },
+          { id: 'o4', label: 'Coffee Table', emoji: '☕' }
+        ]
+      });
+      localStorage.setItem('cp_polls', JSON.stringify(polls));
+    }
+
+    function savePolls() { localStorage.setItem('cp_polls', JSON.stringify(polls)); }
+    function saveVotes() { localStorage.setItem('cp_votes', JSON.stringify(pollVotes)); }
+    function savePollComments() { localStorage.setItem('cp_poll_comments', JSON.stringify(pollComments)); }
+
+    // ── Render all polls ────────────────────────────
+    function renderPolls() {
+      const container = document.getElementById('pollsContainer');
+      if (polls.length === 0) {
+        container.innerHTML = '<div class="no-polls">No polls yet — create the first one!</div>';
+        return;
+      }
+      container.innerHTML = polls.map(poll => buildPollCard(poll)).join('');
+    }
+
+    function buildPollCard(poll) {
+      const votes = pollVotes[poll.id] || {};
+      const totalVotes = Object.values(votes).reduce((a, b) => a + b, 0);
+      const userVote = votes['_user_' + poll.id] || null;
+      const hasVoted = !!userVote;
+      const maxVotes = Math.max(...poll.options.map(o => votes[o.id] || 0), 0);
+      const cmCount = (pollComments[poll.id] || []).length;
+
+      const optionsHtml = poll.options.map(opt => {
+        const v = votes[opt.id] || 0;
+        const pct = totalVotes > 0 ? Math.round((v / totalVotes) * 100) : 0;
+        const isSelected = userVote === opt.id;
+        const isWinner = hasVoted && v === maxVotes && v > 0;
+        const classes = ['poll-option', isSelected ? 'selected' : '', hasVoted ? 'voted' : ''].filter(Boolean).join(' ');
+        const barClass = isWinner ? 'winner-bar' : '';
+        const clickAttr = hasVoted ? '' : `onclick="castVote('${poll.id}','${opt.id}')"`;
+        return `
+          <div class="${classes}" ${clickAttr}>
+            <div class="poll-option-img">${opt.emoji || '📦'}</div>
+            <div class="poll-option-label">${escHtml(opt.label)}</div>
+            ${hasVoted ? `
+            <div class="poll-option-bar-wrap">
+              <div class="poll-option-bar-bg">
+                <div class="poll-option-bar-fill ${barClass}" style="width:${pct}%"></div>
+              </div>
+              <div class="poll-option-votes">${v} vote${v !== 1 ? 's' : ''} (${pct}%)</div>
+            </div>` : ''}
+            <div class="vote-check">✓</div>
+          </div>`;
+      }).join('');
+
+      const cmHtml = (pollComments[poll.id] || []).map(c => `
+        <div class="comment-item">
+          <span class="comment-author">${escHtml(c.name)}</span>
+          <span class="comment-time">${c.time}</span>
+          <div class="comment-text">${escHtml(c.text)}</div>
+        </div>`).join('') || '<div class="no-comments">No comments yet.</div>';
+
+      return `
+        <div class="poll-card" id="poll_${poll.id}">
+          <div class="poll-header">
+            <div>
+              <div class="poll-question">${escHtml(poll.question)}</div>
+              <div class="poll-meta">By <span class="poll-author">${escHtml(poll.author)}</span> · ${poll.date}</div>
+            </div>
+          </div>
+          <div class="poll-options">${optionsHtml}</div>
+          <div class="poll-footer">
+            <div class="total-votes">${totalVotes} total vote${totalVotes !== 1 ? 's' : ''}</div>
+            ${hasVoted ? '<div class="voted-msg">✓ You voted!</div>' : '<div style="font-size:13px;color:#aaa;">Click an option to vote</div>'}
+          </div>
+          <div class="poll-comments">
+            <button class="toggle-comments" onclick="toggleComments('${poll.id}')">
+              💬 ${cmCount > 0 ? cmCount + ' comment' + (cmCount !== 1 ? 's' : '') : 'Add a comment'}
+            </button>
+            <div id="cmbox_${poll.id}" style="display:none;">
+              <div class="comment-input-row">
+                <input type="text" class="cmt-name" id="pcm-name-${poll.id}" placeholder="Your name">
+                <textarea class="cmt-text" id="pcm-text-${poll.id}" placeholder="Share your thoughts…"></textarea>
+                <button class="cmt-submit" onclick="postPollComment('${poll.id}')">Post</button>
+              </div>
+              <div class="comments-list-poll">${cmHtml}</div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function toggleComments(pollId) {
+      const box = document.getElementById('cmbox_' + pollId);
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // ── Voting ──────────────────────────────────────
+    function castVote(pollId, optionId) {
+      if (!pollVotes[pollId]) pollVotes[pollId] = {};
+      const votes = pollVotes[pollId];
+      if (votes['_user_' + pollId]) return; // already voted
+      votes[optionId] = (votes[optionId] || 0) + 1;
+      votes['_user_' + pollId] = optionId;
+      saveVotes();
+      renderPolls();
+    }
+
+    // ── Poll comments ───────────────────────────────
+    function postPollComment(pollId) {
+      const name = document.getElementById('pcm-name-' + pollId).value.trim();
+      const text = document.getElementById('pcm-text-' + pollId).value.trim();
+      if (!name || !text) { alert('Please enter your name and a comment.'); return; }
+      if (!pollComments[pollId]) pollComments[pollId] = [];
+      pollComments[pollId].push({ name, text, time: new Date().toLocaleString('en-AU') });
+      savePollComments();
+      renderPolls();
+      // reopen the comment box after re-render
+      const box = document.getElementById('cmbox_' + pollId);
+      if (box) box.style.display = 'block';
+    }
+
+    // ── Create poll form ────────────────────────────
+    function openCreatePoll() {
+      document.getElementById('createPollModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function addOption() {
+      const builder = document.getElementById('optionsBuilder');
+      const count = builder.children.length + 1;
+      if (count > 6) { alert('Maximum 6 options allowed.'); return; }
+      const row = document.createElement('div');
+      row.className = 'option-row';
+      row.innerHTML = `
+        <input type="text" placeholder="Option ${count}" class="opt-label">
+        <button class="remove-option" onclick="removeOption(this)">✕</button>`;
+      builder.appendChild(row);
+    }
+
+    function removeOption(btn) {
+      const builder = document.getElementById('optionsBuilder');
+      if (builder.children.length <= 2) { alert('A poll needs at least 2 options.'); return; }
+      btn.parentElement.remove();
+    }
+
+    const EMOJIS = ['📦','🏠','🪑','🛋️','🍳','🔧','🌿','🎮','👕','📱','🚿','🏋️'];
+    function submitPoll() {
+      const question = document.getElementById('pf-question').value.trim();
+      const author = document.getElementById('pf-name').value.trim();
+      if (!question) { alert('Please enter a poll question.'); return; }
+      if (!author) { alert('Please enter your name.'); return; }
+
+      const labels = Array.from(document.querySelectorAll('.opt-label')).map(i => i.value.trim()).filter(Boolean);
+      if (labels.length < 2) { alert('Please enter at least 2 options.'); return; }
+
+      const poll = {
+        id: 'p_' + Date.now(),
+        question,
+        author,
+        date: new Date().toLocaleDateString('en-AU'),
+        options: labels.map((label, i) => ({
+          id: 'o_' + Date.now() + '_' + i,
+          label,
+          emoji: EMOJIS[i % EMOJIS.length]
+        }))
+      };
+
+      polls.unshift(poll);
+      savePolls();
+      closeModal('createPollModal');
+      resetPollForm();
+      renderPolls();
+    }
+
+    function resetPollForm() {
+      document.getElementById('pf-question').value = '';
+      document.getElementById('pf-name').value = '';
+      const builder = document.getElementById('optionsBuilder');
+      builder.innerHTML = `
+        <div class="option-row"><input type="text" placeholder="Option 1" class="opt-label"></div>
+        <div class="option-row"><input type="text" placeholder="Option 2" class="opt-label"><button class="remove-option" onclick="removeOption(this)">✕</button></div>`;
+    }
+
+    // ── Helpers ─────────────────────────────────────
+    function escHtml(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function closeOnOverlay(e, id) {
+      if (e.target === document.getElementById(id)) closeModal(id);
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(m => {
+          m.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      }
+    });
+
+    // ── Init ────────────────────────────────────────
+    renderPolls();
+  </script>
+</body>
+</html>

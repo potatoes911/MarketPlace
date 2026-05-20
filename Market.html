@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace</title>
+  <link rel="stylesheet" href="Test.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #f7f9fc;
+      color: #333;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    nav a img { height: clamp(40px, 5vw, 66px); width: auto; }
+
+    .shadow-line {
+      border: none;
+      background-color: #006400;
+      height: 2px;
+      width: 100%;
+      box-shadow: 2px 6px 8px rgba(0,0,0,0.6);
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+
+    /* ── Top bar ── */
+    .top-bar {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 40px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .page-heading { flex: 0 0 auto; }
+    .page-heading h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 3vw, 34px);
+      color: #1a1a1a;
+    }
+    .listing-count { font-size: 14px; color: #888; font-weight: 300; margin-top: 2px; }
+
+    .search-bar {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 1.5px solid #dde2ea;
+      border-radius: 10px;
+      padding: 0 14px;
+      gap: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .search-bar input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      padding: 10px 0;
+      background: transparent;
+      color: #333;
+    }
+    .search-bar span { color: #aaa; font-size: 16px; }
+
+    .filter-select {
+      padding: 10px 14px;
+      border: 1.5px solid #dde2ea;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .btn-list {
+      background: #006400;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 22px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-list:hover { background: #004d00; }
+
+    /* ── Grid ── */
+    .marketplace-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 28px;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 40px 60px;
+    }
+
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 20px;
+      color: #aaa;
+      font-size: 16px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.13); }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background-color: #e4e8ee;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-image .placeholder-img {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; color: #c0c8d4;
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    .badge-sale { background: #006400; color: #fff; }
+    .badge-free { background: #0061fe; color: #fff; }
+    .badge-borrow { background: #e67e00; color: #fff; }
+
+    .card-body { padding: 18px 22px 22px; }
+    .card-category {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: #006400; margin-bottom: 6px;
+    }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(16px, 1.8vw, 21px);
+      color: #1a1a1a; margin-bottom: 6px;
+    }
+    .card-desc {
+      font-size: 13.5px; color: #666; line-height: 1.55;
+      margin-bottom: 14px;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; }
+    .card-price { font-size: 20px; font-weight: 500; color: #1a1a1a; }
+    .card-price span { font-size: 13px; color: #999; font-weight: 300; }
+
+    .view-btn {
+      background: #006400; color: #fff; border: none;
+      border-radius: 8px; padding: 8px 18px;
+      font-size: 13px; font-family: 'DM Sans', sans-serif;
+      font-weight: 500; cursor: pointer; transition: background 0.2s;
+    }
+    .view-btn:hover { background: #004d00; }
+
+    /* ── Modal overlay (shared) ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal {
+      background: #fff; border-radius: 18px;
+      max-width: 700px; width: 100%;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      animation: slideUp 0.25s ease;
+      max-height: 90vh; overflow-y: auto;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+
+    .modal-image {
+      width: 100%; aspect-ratio: 16/9;
+      background: #e4e8ee; position: relative; overflow: hidden;
+    }
+    .modal-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .modal-image .placeholder-img {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; color: #c0c8d4;
+    }
+
+    .close-x {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(0,0,0,0.45); color: #fff;
+      border: none; border-radius: 50%;
+      width: 34px; height: 34px; font-size: 16px;
+      cursor: pointer; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .close-x:hover { background: rgba(0,0,0,0.7); }
+
+    .modal-body { padding: 28px 32px 32px; }
+    .modal-category { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #006400; margin-bottom: 8px; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.5vw, 28px); color: #1a1a1a; margin-bottom: 10px; }
+    .modal-price { font-size: 26px; font-weight: 500; color: #1a1a1a; margin-bottom: 16px; }
+    .modal-price span { font-size: 15px; color: #999; font-weight: 300; }
+    .modal-desc { font-size: 14.5px; color: #555; line-height: 1.7; margin-bottom: 24px; }
+
+    .modal-meta {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 12px; margin-bottom: 24px;
+      background: #f7f9fc; border-radius: 10px; padding: 16px 20px;
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: #aaa; }
+    .meta-value { font-size: 14px; font-weight: 500; color: #333; }
+
+    .modal-actions { display: flex; gap: 12px; margin-bottom: 24px; }
+    .btn-contact {
+      background: #006400; color: #fff; border: none;
+      border-radius: 9px; padding: 11px 26px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      font-weight: 500; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-contact:hover { background: #004d00; }
+    .btn-close-modal {
+      background: transparent; color: #666;
+      border: 1.5px solid #dde2ea; border-radius: 9px;
+      padding: 11px 22px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; cursor: pointer; transition: border-color 0.2s;
+    }
+    .btn-close-modal:hover { border-color: #aaa; }
+
+    /* ── Comments section inside modal ── */
+    .comments-section { border-top: 1px solid #eee; padding-top: 20px; }
+    .comments-section h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; color: #1a1a1a; margin-bottom: 16px;
+    }
+    .comment-input-row {
+      display: flex; gap: 10px; margin-bottom: 18px;
+    }
+    .comment-input-row input, .comment-input-row textarea {
+      border: 1.5px solid #dde2ea; border-radius: 8px;
+      padding: 9px 13px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; outline: none; transition: border-color 0.2s;
+      color: #333;
+    }
+    .comment-input-row input:focus, .comment-input-row textarea:focus { border-color: #006400; }
+    .comment-name-input { width: 130px; flex-shrink: 0; }
+    .comment-text-input { flex: 1; resize: none; height: 40px; }
+    .comment-submit {
+      background: #006400; color: #fff; border: none;
+      border-radius: 8px; padding: 9px 16px;
+      font-size: 13px; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; white-space: nowrap; transition: background 0.2s;
+    }
+    .comment-submit:hover { background: #004d00; }
+
+    .comments-list { display: flex; flex-direction: column; gap: 12px; max-height: 240px; overflow-y: auto; }
+    .comment-item {
+      background: #f7f9fc; border-radius: 10px;
+      padding: 12px 16px; border-left: 3px solid #006400;
+    }
+    .comment-author { font-weight: 500; font-size: 13px; color: #1a1a1a; }
+    .comment-time { font-size: 11px; color: #aaa; margin-left: 8px; }
+    .comment-text { font-size: 13.5px; color: #555; margin-top: 4px; line-height: 1.5; }
+    .no-comments { font-size: 13px; color: #bbb; text-align: center; padding: 16px 0; }
+
+    /* ── List Item Modal ── */
+    #listModal .modal { max-width: 560px; }
+
+    .list-form { display: flex; flex-direction: column; gap: 18px; padding: 28px 32px 32px; }
+    .list-form h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: #1a1a1a; }
+    .list-form p.sub { font-size: 13px; color: #888; margin-top: -12px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 11px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #888;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      border: 1.5px solid #dde2ea; border-radius: 10px;
+      padding: 11px 14px; font-family: 'DM Sans', sans-serif;
+      font-size: 14px; outline: none; transition: border-color 0.2s;
+      color: #333; background: #fff;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: #006400;
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .listing-type-group { display: flex; flex-direction: column; gap: 8px; }
+    .listing-type-group label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: #888; }
+    .type-toggle {
+      display: flex; background: #f0f2f5; border-radius: 10px;
+      padding: 4px; gap: 4px;
+    }
+    .type-btn {
+      flex: 1; padding: 8px 0; border: none; border-radius: 8px;
+      background: transparent; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500; cursor: pointer; color: #777;
+      transition: all 0.2s;
+    }
+    .type-btn.active { background: #fff; color: #1a1a1a; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+    .seller-name-input { font-family: 'DM Sans', sans-serif; }
+
+    .btn-post {
+      background: #1a1a1a; color: #fff; border: none;
+      border-radius: 12px; padding: 14px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s; margin-top: 4px;
+    }
+    .btn-post:hover { background: #333; }
+
+    @media (max-width: 700px) {
+      .top-bar { padding: 0 20px 16px; }
+      .marketplace-grid { grid-template-columns: 1fr; padding: 0 20px 60px; }
+      .modal-meta { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .comment-input-row { flex-wrap: wrap; }
+      .comment-name-input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="index.html"><img src="Images/Logo.png" alt="Logo"/></a>
+    <a href="Market.html"><img src="Images/button_cars.png" alt="Cars"/></a>
+    <a href="Polls.html"><img src="Images/button_companies.png" alt="Companies"/></a>
+    <a href="Comments.html"><img src="Images/button_comments.png" alt="Comments"/></a>
+    <a href="Videos.html"><img src="Images/button_videos.png" alt="Videos"/></a>
+    <a href="Polls.html"><img src="Images/button_comments.png" alt="Polls"/></a>
+  </nav>
+  <hr class="shadow-line">
+
+  <!-- Top bar: heading + search + filter + list button -->
+  <div class="top-bar">
+    <div class="page-heading">
+      <h2>Marketplace</h2>
+      <div class="listing-count" id="listingCount">0 items</div>
+    </div>
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search items…" oninput="renderGrid()">
+    </div>
+    <select class="filter-select" id="filterCategory" onchange="renderGrid()">
+      <option value="">All Categories</option>
+      <option value="Tools">Tools</option>
+      <option value="Furniture">Furniture</option>
+      <option value="Household">Household</option>
+      <option value="Garden">Garden</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Clothing">Clothing</option>
+      <option value="Sports">Sports</option>
+      <option value="Other">Other</option>
+    </select>
+    <button class="btn-list" onclick="openListModal()">＋ List an Item</button>
+  </div>
+
+  <!-- Grid -->
+  <div class="marketplace-grid" id="marketGrid">
+    <div class="no-results">No listings yet — be the first to post!</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       LIST AN ITEM MODAL
+  ══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="listModal" onclick="closeOnOverlay(event,'listModal')">
+    <div class="modal">
+      <div class="list-form">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <h2>List an item</h2>
+            <p class="sub">Help your community reuse and share.</p>
+          </div>
+          <button class="close-x" style="position:static;background:#eee;color:#555;" onclick="closeModal('listModal')">✕</button>
+        </div>
+
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="lf-name" placeholder="e.g. Jane Smith" class="seller-name-input">
+        </div>
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="lf-title" placeholder="e.g. Electric Power Drill">
+        </div>
+
+        <div class="form-row">
+          <div class="listing-type-group">
+            <label>Listing Type</label>
+            <div class="type-toggle">
+              <button class="type-btn active" onclick="setType(this,'sale')">SALE</button>
+              <button class="type-btn" onclick="setType(this,'borrow')">BORROW</button>
+              <button class="type-btn" onclick="setType(this,'free')">FREE</button>
+            </div>
+          </div>
+          <div class="form-group" id="priceGroup">
+            <label>Price ($)</label>
+            <input type="number" id="lf-price" placeholder="0" min="0" step="0.01">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="lf-category">
+              <option>Tools</option>
+              <option>Furniture</option>
+              <option>Household</option>
+              <option>Garden</option>
+              <option>Electronics</option>
+              <option>Clothing</option>
+              <option>Sports</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Condition</label>
+            <select id="lf-condition">
+              <option>New</option>
+              <option>Like New</option>
+              <option>Good</option>
+              <option>Fair</option>
+              <option>For Parts</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Location / Suburb</label>
+          <input type="text" id="lf-location" placeholder="e.g. Manly, NSW">
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="lf-desc" placeholder="Condition, pickup info, dimensions, why you're selling…"></textarea>
+        </div>
+
+        <button class="btn-post" onclick="submitListing()">POST TO MARKETPLACE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       VIEW ITEM MODAL (dynamic)
+  ══════════════════════════════════════════ -->
+  <div class="modal-overlay" id="viewModal" onclick="closeOnOverlay(event,'viewModal')">
+    <div class="modal">
+      <div class="modal-image" id="vm-image" style="position:relative;">
+        <button class="close-x" onclick="closeModal('viewModal')">✕</button>
+        <div class="placeholder-img" id="vm-placeholder">🛒</div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-category" id="vm-category"></div>
+        <div class="modal-title" id="vm-title"></div>
+        <div class="modal-price" id="vm-price"></div>
+        <div class="modal-desc" id="vm-desc"></div>
+        <div class="modal-meta">
+          <div class="meta-item"><span class="meta-label">Condition</span><span class="meta-value" id="vm-condition"></span></div>
+          <div class="meta-item"><span class="meta-label">Location</span><span class="meta-value" id="vm-location"></span></div>
+          <div class="meta-item"><span class="meta-label">Seller</span><span class="meta-value" id="vm-seller"></span></div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-contact">Contact Seller</button>
+          <button class="btn-close-modal" onclick="closeModal('viewModal')">Close</button>
+        </div>
+
+        <!-- Comments -->
+        <div class="comments-section">
+          <h4>Comments</h4>
+          <div class="comment-input-row">
+            <input type="text" class="comment-name-input" id="cm-name" placeholder="Your name">
+            <textarea class="comment-text-input" id="cm-text" placeholder="Leave a comment…"></textarea>
+            <button class="comment-submit" onclick="postComment()">Post</button>
+          </div>
+          <div class="comments-list" id="commentsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── State ──────────────────────────────────────
+    let listings = JSON.parse(localStorage.getItem('mp_listings') || '[]');
+    let comments = JSON.parse(localStorage.getItem('mp_comments') || '{}');
+    let currentListingId = null;
+    let currentType = 'sale';
+
+    function saveListings() { localStorage.setItem('mp_listings', JSON.stringify(listings)); }
+    function saveComments() { localStorage.setItem('mp_comments', JSON.stringify(comments)); }
+
+    // ── Render grid ────────────────────────────────
+    function renderGrid() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const cat = document.getElementById('filterCategory').value;
+      const grid = document.getElementById('marketGrid');
+
+      let filtered = listings.filter(l => {
+        const matchQ = !q || l.title.toLowerCase().includes(q) || l.desc.toLowerCase().includes(q) || l.category.toLowerCase().includes(q);
+        const matchCat = !cat || l.category === cat;
+        return matchQ && matchCat;
+      });
+
+      document.getElementById('listingCount').textContent = filtered.length + ' item' + (filtered.length !== 1 ? 's' : '');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="no-results">' + (listings.length === 0 ? 'No listings yet — be the first to post!' : 'No items match your search.') + '</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(l => {
+        const badgeClass = l.type === 'free' ? 'badge-free' : l.type === 'borrow' ? 'badge-borrow' : 'badge-sale';
+        const badgeLabel = l.type === 'free' ? 'FREE' : l.type === 'borrow' ? 'BORROW' : 'SALE';
+        const priceStr = l.type === 'free' ? 'Free' : l.type === 'borrow' ? 'Borrow' : '$' + parseFloat(l.price || 0).toFixed(2);
+        const cmCount = (comments[l.id] || []).length;
+        return `
+          <div class="card" onclick="openViewModal('${l.id}')">
+            <div class="card-image">
+              <div class="placeholder-img">📦</div>
+              <span class="badge ${badgeClass}">${badgeLabel}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-category">${l.category}</div>
+              <div class="card-title">${escHtml(l.title)}</div>
+              <div class="card-desc">${escHtml(l.desc)}</div>
+              <div class="card-footer">
+                <div class="card-price">${priceStr} <span>${l.type === 'sale' ? 'ono' : ''}</span></div>
+                <button class="view-btn">View Details ${cmCount > 0 ? '💬'+cmCount : ''}</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // ── List item form ──────────────────────────────
+    function setType(btn, type) {
+      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentType = type;
+      document.getElementById('priceGroup').style.display = type === 'free' ? 'none' : 'flex';
+    }
+
+    function openListModal() {
+      document.getElementById('listModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function submitListing() {
+      const title = document.getElementById('lf-title').value.trim();
+      const name = document.getElementById('lf-name').value.trim();
+      if (!title) { alert('Please enter a title for your listing.'); return; }
+      if (!name) { alert('Please enter your name.'); return; }
+
+      const listing = {
+        id: 'l_' + Date.now(),
+        title,
+        seller: name,
+        desc: document.getElementById('lf-desc').value.trim() || 'No description provided.',
+        category: document.getElementById('lf-category').value,
+        condition: document.getElementById('lf-condition').value,
+        location: document.getElementById('lf-location').value.trim() || 'Not specified',
+        price: document.getElementById('lf-price').value || '0',
+        type: currentType,
+        date: new Date().toLocaleDateString('en-AU')
+      };
+
+      listings.unshift(listing);
+      saveListings();
+      closeModal('listModal');
+      resetListForm();
+      renderGrid();
+    }
+
+    function resetListForm() {
+      ['lf-title','lf-name','lf-desc','lf-location','lf-price'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('lf-category').selectedIndex = 0;
+      document.getElementById('lf-condition').selectedIndex = 2;
+      setType(document.querySelectorAll('.type-btn')[0], 'sale');
+    }
+
+    // ── View modal ──────────────────────────────────
+    function openViewModal(id) {
+      const l = listings.find(x => x.id === id);
+      if (!l) return;
+      currentListingId = id;
+
+      const typeLabel = l.type === 'free' ? 'Free' : l.type === 'borrow' ? 'For Borrow' : '$' + parseFloat(l.price || 0).toFixed(2);
+      const typeSub = l.type === 'sale' ? ' <span>or nearest offer</span>' : '';
+
+      document.getElementById('vm-category').textContent = l.category;
+      document.getElementById('vm-title').textContent = l.title;
+      document.getElementById('vm-price').innerHTML = typeLabel + typeSub;
+      document.getElementById('vm-desc').textContent = l.desc;
+      document.getElementById('vm-condition').textContent = l.condition;
+      document.getElementById('vm-location').textContent = l.location;
+      document.getElementById('vm-seller').textContent = l.seller;
+
+      renderComments();
+      document.getElementById('viewModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // ── Comments ────────────────────────────────────
+    function postComment() {
+      const name = document.getElementById('cm-name').value.trim();
+      const text = document.getElementById('cm-text').value.trim();
+      if (!name || !text) { alert('Please enter your name and a comment.'); return; }
+      if (!comments[currentListingId]) comments[currentListingId] = [];
+      comments[currentListingId].push({ name, text, time: new Date().toLocaleString('en-AU') });
+      saveComments();
+      document.getElementById('cm-text').value = '';
+      renderComments();
+      renderGrid(); // update comment count badge
+    }
+
+    function renderComments() {
+      const list = comments[currentListingId] || [];
+      const el = document.getElementById('commentsList');
+      if (list.length === 0) {
+        el.innerHTML = '<div class="no-comments">No comments yet. Be the first!</div>';
+        return;
+      }
+      el.innerHTML = list.map(c => `
+        <div class="comment-item">
+          <span class="comment-author">${escHtml(c.name)}</span>
+          <span class="comment-time">${c.time}</span>
+          <div class="comment-text">${escHtml(c.text)}</div>
+        </div>`).join('');
+    }
+
+    // ── Helpers ─────────────────────────────────────
+    function escHtml(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function closeOnOverlay(e, id) {
+      if (e.target === document.getElementById(id)) closeModal(id);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(m => {
+          m.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      }
+    });
+
+    // ── Init ────────────────────────────────────────
+    renderGrid();
+  </script>
+</body>
+</html>
