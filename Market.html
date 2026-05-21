@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marketplace</title>
   <link rel="stylesheet" href="Test.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap');
@@ -14,691 +11,990 @@
       background-color: #f7f9fc;
       color: #333;
       font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
     }
 
     nav a img { height: clamp(40px, 5vw, 66px); width: auto; }
 
     .shadow-line {
-      border: none;
-      background-color: #006400;
-      height: 2px;
-      width: 100%;
-      box-shadow: 2px 6px 8px rgba(0,0,0,0.6);
-      margin-top: 15px;
-      margin-bottom: 30px;
+      border: none; background-color: #006400; height: 2px; width: 100%;
+      box-shadow: 2px 6px 8px rgba(0,0,0,0.6); margin-top: 15px; margin-bottom: 30px;
     }
 
-    /* ── Top bar ── */
-    .top-bar {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 0 40px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
+    .page-heading {
+      max-width: 1300px; margin: 0 auto; padding: 0 40px 24px;
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
     }
 
-    .page-heading { flex: 0 0 auto; }
+    .heading-left { display: flex; align-items: baseline; gap: 12px; }
+
     .page-heading h2 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(22px, 3vw, 34px);
-      color: #1a1a1a;
-    }
-    .listing-count { font-size: 14px; color: #888; font-weight: 300; margin-top: 2px; }
-
-    .search-bar {
-      flex: 1;
-      min-width: 200px;
-      display: flex;
-      align-items: center;
-      background: #fff;
-      border: 1.5px solid #dde2ea;
-      border-radius: 10px;
-      padding: 0 14px;
-      gap: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-    }
-    .search-bar input {
-      border: none;
-      outline: none;
-      width: 100%;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      padding: 10px 0;
-      background: transparent;
-      color: #333;
-    }
-    .search-bar span { color: #aaa; font-size: 16px; }
-
-    .filter-select {
-      padding: 10px 14px;
-      border: 1.5px solid #dde2ea;
-      border-radius: 10px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      background: #fff;
-      color: #333;
-      cursor: pointer;
-      outline: none;
+      font-size: clamp(22px, 3vw, 34px); color: #1a1a1a;
     }
 
-    .btn-list {
-      background: #006400;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 10px 22px;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-list:hover { background: #004d00; }
+    .listing-count { font-size: 14px; color: #888; font-weight: 300; }
 
-    /* ── Grid ── */
+    .add-listing-btn {
+      background: #006400; color: #fff; border: none; border-radius: 10px;
+      padding: 11px 22px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+      font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.15s; white-space: nowrap;
+    }
+
+    .add-listing-btn:hover { background: #004d00; transform: translateY(-1px); }
+
     .marketplace-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 28px;
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 0 40px 60px;
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 28px; max-width: 1300px; margin: 0 auto; padding: 0 40px 60px;
     }
 
-    .no-results {
-      grid-column: 1/-1;
-      text-align: center;
-      padding: 60px 20px;
-      color: #aaa;
-      font-size: 16px;
-    }
-
-    /* ── Card ── */
     .card {
-      background: #fff;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-      cursor: pointer;
+      background: #fff; border-radius: 14px; overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07); cursor: pointer;
       transition: transform 0.25s ease, box-shadow 0.25s ease;
-      position: relative;
     }
+
     .card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.13); }
 
-    .card-image {
-      width: 100%;
-      aspect-ratio: 16/9;
-      background-color: #e4e8ee;
-      position: relative;
-      overflow: hidden;
-    }
+    .card-image { width: 100%; aspect-ratio: 16/9; position: relative; overflow: hidden; background: #e4e8ee; }
     .card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .card-image .placeholder-img {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px; color: #c0c8d4;
+
+    .seed-bg-1 { background: linear-gradient(135deg, #d4e8d4, #a8c8a8); }
+    .seed-bg-2 { background: linear-gradient(135deg, #e8d4b8, #c8a878); }
+    .seed-bg-3 { background: linear-gradient(135deg, #d4d8e8, #a8aec8); }
+    .seed-bg-4 { background: linear-gradient(135deg, #e8d4d4, #c8a8a8); }
+    .seed-bg-5 { background: linear-gradient(135deg, #d4e8e8, #a8c8c8); }
+    .seed-bg-6 { background: linear-gradient(135deg, #e8e4d4, #c8c0a8); }
+
+    .card-image-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
     }
 
-    .badge {
-      position: absolute;
-      top: 12px; left: 12px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-    }
-    .badge-sale { background: #006400; color: #fff; }
-    .badge-free { background: #0061fe; color: #fff; }
-    .badge-borrow { background: #e67e00; color: #fff; }
+    .placeholder-icon { font-size: 48px; }
+    .placeholder-label { font-size: 12px; color: #888; font-weight: 500; letter-spacing: 0.04em; }
 
     .card-body { padding: 18px 22px 22px; }
+
     .card-category {
-      font-size: 11px; font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: #006400; margin-bottom: 6px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #006400; margin-bottom: 6px;
     }
+
     .card-title {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(16px, 1.8vw, 21px);
-      color: #1a1a1a; margin-bottom: 6px;
+      font-size: clamp(16px, 1.8vw, 21px); color: #1a1a1a; margin-bottom: 6px;
     }
+
     .card-desc {
-      font-size: 13.5px; color: #666; line-height: 1.55;
-      margin-bottom: 14px;
-      display: -webkit-box; -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical; overflow: hidden;
+      font-size: 13.5px; color: #666; line-height: 1.55; margin-bottom: 14px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
+
     .card-footer { display: flex; align-items: center; justify-content: space-between; }
     .card-price { font-size: 20px; font-weight: 500; color: #1a1a1a; }
-    .card-price span { font-size: 13px; color: #999; font-weight: 300; }
+
+    .card-badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 500; }
+    .badge-sale   { background: #e8f5e8; color: #006400; }
+    .badge-free   { background: #fff3cd; color: #856404; }
+    .badge-borrow { background: #e1f0ff; color: #0061fe; }
 
     .view-btn {
-      background: #006400; color: #fff; border: none;
-      border-radius: 8px; padding: 8px 18px;
-      font-size: 13px; font-family: 'DM Sans', sans-serif;
+      background: #006400; color: #fff; border: none; border-radius: 8px;
+      padding: 8px 18px; font-size: 13px; font-family: 'DM Sans', sans-serif;
       font-weight: 500; cursor: pointer; transition: background 0.2s;
     }
+
     .view-btn:hover { background: #004d00; }
 
-    /* ── Modal overlay (shared) ── */
+    .empty-grid { grid-column: 1/-1; text-align: center; padding: 64px 20px; }
+    .empty-grid .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-grid p { font-size: 16px; color: #999; margin-bottom: 6px; }
+    .empty-grid span { font-size: 14px; color: #bbb; }
+
+    /* ════ DETAIL MODAL ════ */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55);
-      z-index: 1000;
-      align-items: center; justify-content: center;
-      padding: 20px;
+      background: rgba(0,0,0,0.55); z-index: 1000;
+      align-items: center; justify-content: center; padding: 20px;
     }
+
     .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
 
     .modal {
-      background: #fff; border-radius: 18px;
-      max-width: 700px; width: 100%;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
-      animation: slideUp 0.25s ease;
+      background: #fff; border-radius: 18px; max-width: 700px; width: 100%;
       max-height: 90vh; overflow-y: auto;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to   { transform: translateY(0);    opacity: 1; }
+      box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      animation: slideUp 0.25s ease; position: relative;
     }
 
-    .modal-image {
-      width: 100%; aspect-ratio: 16/9;
-      background: #e4e8ee; position: relative; overflow: hidden;
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity:0; }
+      to   { transform: translateY(0);    opacity:1; }
     }
-    .modal-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .modal-image .placeholder-img {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 48px; color: #c0c8d4;
+
+    .modal-image-strip {
+      width: 100%; aspect-ratio: 16/9; background: #e4e8ee; position: relative; overflow: hidden;
     }
+
+    .modal-image-strip img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .modal-image-strip .no-img {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    }
+
+    .img-nav {
+      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px;
+    }
+
+    .img-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,0.5); cursor: pointer; border: none; transition: background 0.2s;
+    }
+
+    .img-dot.active { background: #fff; }
+
+    .img-prev, .img-next {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(0,0,0,0.35); color: #fff; border: none;
+      padding: 10px 14px; font-size: 16px; cursor: pointer; transition: background 0.2s;
+    }
+
+    .img-prev { left: 0; border-radius: 0 6px 6px 0; }
+    .img-next { right: 0; border-radius: 6px 0 0 6px; }
+    .img-prev:hover, .img-next:hover { background: rgba(0,0,0,0.7); }
 
     .close-x {
-      position: absolute; top: 12px; right: 12px;
-      background: rgba(0,0,0,0.45); color: #fff;
-      border: none; border-radius: 50%;
-      width: 34px; height: 34px; font-size: 16px;
-      cursor: pointer; z-index: 10;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+      position: absolute; top: 12px; right: 14px;
+      background: rgba(0,0,0,0.4); color: #fff; border: none; border-radius: 50%;
+      width: 32px; height: 32px; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; z-index: 10;
     }
-    .close-x:hover { background: rgba(0,0,0,0.7); }
 
     .modal-body { padding: 28px 32px 32px; }
-    .modal-category { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #006400; margin-bottom: 8px; }
-    .modal-title { font-family: 'Playfair Display', serif; font-size: clamp(20px, 2.5vw, 28px); color: #1a1a1a; margin-bottom: 10px; }
-    .modal-price { font-size: 26px; font-weight: 500; color: #1a1a1a; margin-bottom: 16px; }
-    .modal-price span { font-size: 15px; color: #999; font-weight: 300; }
-    .modal-desc { font-size: 14.5px; color: #555; line-height: 1.7; margin-bottom: 24px; }
+
+    .modal-category {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #006400; margin-bottom: 8px;
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(20px, 2.5vw, 28px); color: #1a1a1a; margin-bottom: 10px;
+    }
+
+    .modal-price { font-size: 26px; font-weight: 500; color: #1a1a1a; margin-bottom: 18px; }
+    .modal-desc { font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 24px; }
 
     .modal-meta {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 12px; margin-bottom: 24px;
-      background: #f7f9fc; border-radius: 10px; padding: 16px 20px;
+      display: flex; gap: 24px; flex-wrap: wrap; padding: 16px 0;
+      border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; margin-bottom: 24px;
     }
-    .meta-item { display: flex; flex-direction: column; gap: 3px; }
-    .meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: #aaa; }
-    .meta-value { font-size: 14px; font-weight: 500; color: #333; }
 
-    .modal-actions { display: flex; gap: 12px; margin-bottom: 24px; }
+    .meta-item { display: flex; flex-direction: column; gap: 3px; }
+
+    .meta-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: #aaa; font-weight: 500;
+    }
+
+    .meta-value { font-size: 14px; color: #333; font-weight: 500; }
+
+    .modal-actions { display: flex; gap: 12px; margin-bottom: 32px; }
+
     .btn-contact {
-      background: #006400; color: #fff; border: none;
-      border-radius: 9px; padding: 11px 26px;
-      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      flex: 1; background: #006400; color: #fff; border: none; border-radius: 10px;
+      padding: 13px; font-size: 15px; font-family: 'DM Sans', sans-serif;
       font-weight: 500; cursor: pointer; transition: background 0.2s;
     }
+
     .btn-contact:hover { background: #004d00; }
+
     .btn-close-modal {
-      background: transparent; color: #666;
-      border: 1.5px solid #dde2ea; border-radius: 9px;
-      padding: 11px 22px; font-family: 'DM Sans', sans-serif;
-      font-size: 14px; cursor: pointer; transition: border-color 0.2s;
+      background: #f2f4f7; color: #555; border: none; border-radius: 10px;
+      padding: 13px 20px; font-size: 15px; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; transition: background 0.2s;
     }
-    .btn-close-modal:hover { border-color: #aaa; }
 
-    /* ── Comments section inside modal ── */
-    .comments-section { border-top: 1px solid #eee; padding-top: 20px; }
-    .comments-section h4 {
+    .btn-close-modal:hover { background: #e5e8ec; }
+
+    /* ════ COMMENTS SECTION ════ */
+    .comments-section { border-top: 1px solid #f0f0f0; padding-top: 24px; }
+
+    .comments-heading {
       font-family: 'Playfair Display', serif;
-      font-size: 17px; color: #1a1a1a; margin-bottom: 16px;
+      font-size: 18px; color: #1a1a1a; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px;
     }
-    .comment-input-row {
-      display: flex; gap: 10px; margin-bottom: 18px;
+
+    .comments-heading .comment-count {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; color: #aaa; font-weight: 400;
     }
-    .comment-input-row input, .comment-input-row textarea {
-      border: 1.5px solid #dde2ea; border-radius: 8px;
-      padding: 9px 13px; font-family: 'DM Sans', sans-serif;
-      font-size: 13px; outline: none; transition: border-color 0.2s;
-      color: #333;
+
+    /* Comment form */
+    .comment-form { margin-bottom: 24px; }
+
+    .comment-form-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;
     }
-    .comment-input-row input:focus, .comment-input-row textarea:focus { border-color: #006400; }
-    .comment-name-input { width: 130px; flex-shrink: 0; }
-    .comment-text-input { flex: 1; resize: none; height: 40px; }
+
+    .comment-input {
+      width: 100%; background: #f4f6f9; border: 2px solid transparent;
+      border-radius: 10px; padding: 11px 14px; font-size: 14px;
+      font-family: 'DM Sans', sans-serif; color: #1a1a1a; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .comment-input:focus { border-color: #006400; background: #fff; }
+    .comment-input::placeholder { color: #b0b8c4; }
+    textarea.comment-input { resize: vertical; min-height: 80px; }
+
     .comment-submit {
-      background: #006400; color: #fff; border: none;
-      border-radius: 8px; padding: 9px 16px;
-      font-size: 13px; font-family: 'DM Sans', sans-serif;
-      cursor: pointer; white-space: nowrap; transition: background 0.2s;
+      background: #0f1923; color: #fff; border: none; border-radius: 10px;
+      padding: 11px 22px; font-size: 13px; font-family: 'DM Sans', sans-serif;
+      font-weight: 500; letter-spacing: 0.06em; cursor: pointer;
+      transition: background 0.2s; float: right;
     }
-    .comment-submit:hover { background: #004d00; }
 
-    .comments-list { display: flex; flex-direction: column; gap: 12px; max-height: 240px; overflow-y: auto; }
+    .comment-submit:hover { background: #006400; }
+
+    .comment-form::after { content: ''; display: table; clear: both; }
+
+    /* Comment list */
+    .comments-list { display: flex; flex-direction: column; gap: 14px; }
+
     .comment-item {
-      background: #f7f9fc; border-radius: 10px;
-      padding: 12px 16px; border-left: 3px solid #006400;
+      background: #f8f9fb; border-radius: 12px; padding: 14px 16px;
+      border-left: 3px solid #006400;
     }
-    .comment-author { font-weight: 500; font-size: 13px; color: #1a1a1a; }
-    .comment-time { font-size: 11px; color: #aaa; margin-left: 8px; }
-    .comment-text { font-size: 13.5px; color: #555; margin-top: 4px; line-height: 1.5; }
-    .no-comments { font-size: 13px; color: #bbb; text-align: center; padding: 16px 0; }
 
-    /* ── List Item Modal ── */
-    #listModal .modal { max-width: 560px; }
-
-    .list-form { display: flex; flex-direction: column; gap: 18px; padding: 28px 32px 32px; }
-    .list-form h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: #1a1a1a; }
-    .list-form p.sub { font-size: 13px; color: #888; margin-top: -12px; }
-
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group label {
-      font-size: 11px; font-weight: 500; text-transform: uppercase;
-      letter-spacing: 0.07em; color: #888;
+    .comment-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px;
     }
-    .form-group input, .form-group select, .form-group textarea {
-      border: 1.5px solid #dde2ea; border-radius: 10px;
-      padding: 11px 14px; font-family: 'DM Sans', sans-serif;
-      font-size: 14px; outline: none; transition: border-color 0.2s;
-      color: #333; background: #fff;
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: #006400;
-    }
-    .form-group textarea { resize: vertical; min-height: 90px; }
 
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-
-    .listing-type-group { display: flex; flex-direction: column; gap: 8px; }
-    .listing-type-group label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; color: #888; }
-    .type-toggle {
-      display: flex; background: #f0f2f5; border-radius: 10px;
-      padding: 4px; gap: 4px;
+    .comment-author {
+      font-weight: 500; font-size: 14px; color: #1a1a1a; display: flex; align-items: center; gap: 7px;
     }
+
+    .comment-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #006400; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 600; flex-shrink: 0;
+    }
+
+    .comment-date { font-size: 11px; color: #bbb; }
+
+    .comment-text { font-size: 14px; color: #555; line-height: 1.6; }
+
+    .comment-delete {
+      background: none; border: none; color: #ddd; font-size: 14px;
+      cursor: pointer; padding: 2px 6px; border-radius: 6px; transition: color 0.2s, background 0.2s;
+    }
+
+    .comment-delete:hover { color: #c0392b; background: #fdf0ee; }
+
+    .no-comments {
+      text-align: center; padding: 24px; color: #bbb;
+      font-size: 14px; background: #f8f9fb; border-radius: 12px;
+    }
+
+    /* ════ CREATE MODAL ════ */
+    #create-modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 1100;
+      align-items: flex-start; justify-content: center;
+      padding: 30px 20px 40px; overflow-y: auto;
+    }
+
+    #create-modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+    .create-modal {
+      background: #fff; border-radius: 18px; max-width: 640px; width: 100%;
+      padding: 36px; box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+      animation: slideUp 0.25s ease; position: relative; margin: auto;
+    }
+
+    .create-modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px;
+    }
+
+    .create-modal-header h2 { font-family: 'Playfair Display', serif; font-size: 26px; color: #1a1a1a; }
+    .create-modal-header p { font-size: 14px; color: #999; font-weight: 300; margin-top: 4px; }
+
+    .create-close-x {
+      background: #f2f4f7; color: #777; border: none; border-radius: 50%;
+      width: 32px; height: 32px; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-left: 12px; transition: background 0.2s;
+    }
+
+    .create-close-x:hover { background: #e5e8ec; }
+
+    .field-group { margin-bottom: 22px; }
+
+    .field-label {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #999; margin-bottom: 8px; display: block;
+    }
+
+    .field-input {
+      width: 100%; background: #f4f6f9; border: 2px solid transparent;
+      border-radius: 10px; padding: 13px 15px; font-size: 15px;
+      font-family: 'DM Sans', sans-serif; color: #1a1a1a; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .field-input:focus { border-color: #006400; background: #fff; }
+    .field-input::placeholder { color: #b0b8c4; }
+    textarea.field-input { resize: vertical; min-height: 90px; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .type-toggle { display: flex; background: #f4f6f9; border-radius: 10px; padding: 4px; gap: 4px; }
+
     .type-btn {
-      flex: 1; padding: 8px 0; border: none; border-radius: 8px;
-      background: transparent; font-family: 'DM Sans', sans-serif;
-      font-size: 13px; font-weight: 500; cursor: pointer; color: #777;
-      transition: all 0.2s;
+      flex: 1; padding: 9px; border: none; border-radius: 8px;
+      font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; color: #888; background: transparent; transition: all 0.2s; letter-spacing: 0.04em;
     }
-    .type-btn.active { background: #fff; color: #1a1a1a; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
 
-    .seller-name-input { font-family: 'DM Sans', sans-serif; }
+    .type-btn.active { background: #fff; color: #006400; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-    .btn-post {
-      background: #1a1a1a; color: #fff; border: none;
-      border-radius: 12px; padding: 14px;
-      font-family: 'DM Sans', sans-serif; font-size: 14px;
-      font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
-      cursor: pointer; transition: background 0.2s; margin-top: 4px;
+    #price-group.hidden { opacity: 0.35; pointer-events: none; }
+
+    .condition-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+
+    .condition-btn {
+      padding: 9px 6px; border: 2px solid #e8eaed; border-radius: 10px;
+      background: #fff; font-size: 12px; font-family: 'DM Sans', sans-serif;
+      color: #666; cursor: pointer; transition: all 0.2s; text-align: center;
     }
-    .btn-post:hover { background: #333; }
+
+    .condition-btn:hover { border-color: #006400; color: #006400; }
+    .condition-btn.active { border-color: #006400; background: #e8f5e8; color: #006400; font-weight: 500; }
+
+    .image-upload-area {
+      width: 100%; border: 2px dashed #d0d7e2; border-radius: 12px;
+      padding: 24px 20px; text-align: center; cursor: pointer;
+      transition: border-color 0.2s, background 0.2s; background: #f9fafc; position: relative;
+    }
+
+    .image-upload-area:hover { border-color: #006400; background: #f0f8f0; }
+
+    .image-upload-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+
+    .upload-icon { font-size: 28px; margin-bottom: 6px; }
+    .upload-text { font-size: 13px; color: #888; font-weight: 300; }
+    .upload-text strong { color: #006400; font-weight: 500; }
+
+    #image-preview-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(80px,1fr)); gap: 8px; margin-top: 12px;
+    }
+
+    .preview-thumb { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #eee; }
+    .preview-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .thumb-remove {
+      position: absolute; top: 3px; right: 3px;
+      background: rgba(0,0,0,0.55); color: #fff; border: none; border-radius: 50%;
+      width: 20px; height: 20px; font-size: 11px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .form-divider { height: 1px; background: #f0f2f5; margin: 20px 0; }
+
+    .submit-btn {
+      width: 100%; background: #0f1923; color: #fff; border: none; border-radius: 12px;
+      padding: 15px; font-size: 13px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 6px;
+    }
+
+    .submit-btn:hover { background: #006400; transform: translateY(-1px); }
+
+    .toast {
+      position: fixed; bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #0f1923; color: #fff; padding: 13px 26px; border-radius: 40px;
+      font-size: 14px; font-weight: 500; box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); z-index: 9999; white-space: nowrap;
+    }
+
+    .toast.show    { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: #006400; }
+    .toast.error   { background: #c0392b; }
 
     @media (max-width: 700px) {
-      .top-bar { padding: 0 20px 16px; }
-      .marketplace-grid { grid-template-columns: 1fr; padding: 0 20px 60px; }
-      .modal-meta { grid-template-columns: 1fr 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .comment-input-row { flex-wrap: wrap; }
-      .comment-name-input { width: 100%; }
+      .marketplace-grid { grid-template-columns: 1fr; padding: 0 20px 40px; }
+      .page-heading { padding: 0 20px 18px; }
+      .create-modal { padding: 22px 18px; }
+      .two-col { grid-template-columns: 1fr; }
+      .condition-grid { grid-template-columns: repeat(2,1fr); }
+      .modal-body { padding: 20px; }
+      .comment-form-row { grid-template-columns: 1fr; }
     }
+
+    @media (min-width: 1400px) { .marketplace-grid { max-width: 1500px; } }
   </style>
 </head>
 <body>
 
-  <!-- Nav -->
   <nav>
     <a href="index.html"><img src="Images/Logo.png" alt="Logo"/></a>
-    <a href="Market.html"><img src="Images/button_cars.png" alt="Cars"/></a>
-    <a href="Polls.html"><img src="Images/button_companies.png" alt="Companies"/></a>
+    <a href="test.html"><img src="Images/button_cars.png" alt="Cars"/></a>
+    <a href="Companies.html"><img src="Images/button_companies.png" alt="Companies"/></a>
     <a href="Comments.html"><img src="Images/button_comments.png" alt="Comments"/></a>
     <a href="Videos.html"><img src="Images/button_videos.png" alt="Videos"/></a>
-    <a href="Polls.html"><img src="Images/button_comments.png" alt="Polls"/></a>
   </nav>
+
   <hr class="shadow-line">
 
-  <!-- Top bar: heading + search + filter + list button -->
-  <div class="top-bar">
-    <div class="page-heading">
+  <div class="page-heading">
+    <div class="heading-left">
       <h2>Marketplace</h2>
-      <div class="listing-count" id="listingCount">0 items</div>
+      <span class="listing-count" id="listing-count">0 items</span>
     </div>
-    <div class="search-bar">
-      <span>🔍</span>
-      <input type="text" id="searchInput" placeholder="Search items…" oninput="renderGrid()">
-    </div>
-    <select class="filter-select" id="filterCategory" onchange="renderGrid()">
-      <option value="">All Categories</option>
-      <option value="Tools">Tools</option>
-      <option value="Furniture">Furniture</option>
-      <option value="Household">Household</option>
-      <option value="Garden">Garden</option>
-      <option value="Electronics">Electronics</option>
-      <option value="Clothing">Clothing</option>
-      <option value="Sports">Sports</option>
-      <option value="Other">Other</option>
-    </select>
-    <button class="btn-list" onclick="openListModal()">＋ List an Item</button>
+    <button class="add-listing-btn" onclick="openCreateModal()">＋ List an Item</button>
   </div>
 
-  <!-- Grid -->
-  <div class="marketplace-grid" id="marketGrid">
-    <div class="no-results">No listings yet — be the first to post!</div>
-  </div>
+  <div class="marketplace-grid" id="marketplace-grid"></div>
 
-  <!-- ══════════════════════════════════════════
-       LIST AN ITEM MODAL
-  ══════════════════════════════════════════ -->
-  <div class="modal-overlay" id="listModal" onclick="closeOnOverlay(event,'listModal')">
+  <!-- ════ DETAIL MODAL ════ -->
+  <div class="modal-overlay" id="detail-overlay" onclick="closeDetailOnOverlay(event)">
     <div class="modal">
-      <div class="list-form">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
-          <div>
-            <h2>List an item</h2>
-            <p class="sub">Help your community reuse and share.</p>
-          </div>
-          <button class="close-x" style="position:static;background:#eee;color:#555;" onclick="closeModal('listModal')">✕</button>
-        </div>
-
-        <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" id="lf-name" placeholder="e.g. Jane Smith" class="seller-name-input">
-        </div>
-
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" id="lf-title" placeholder="e.g. Electric Power Drill">
-        </div>
-
-        <div class="form-row">
-          <div class="listing-type-group">
-            <label>Listing Type</label>
-            <div class="type-toggle">
-              <button class="type-btn active" onclick="setType(this,'sale')">SALE</button>
-              <button class="type-btn" onclick="setType(this,'borrow')">BORROW</button>
-              <button class="type-btn" onclick="setType(this,'free')">FREE</button>
-            </div>
-          </div>
-          <div class="form-group" id="priceGroup">
-            <label>Price ($)</label>
-            <input type="number" id="lf-price" placeholder="0" min="0" step="0.01">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Category</label>
-            <select id="lf-category">
-              <option>Tools</option>
-              <option>Furniture</option>
-              <option>Household</option>
-              <option>Garden</option>
-              <option>Electronics</option>
-              <option>Clothing</option>
-              <option>Sports</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Condition</label>
-            <select id="lf-condition">
-              <option>New</option>
-              <option>Like New</option>
-              <option>Good</option>
-              <option>Fair</option>
-              <option>For Parts</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Location / Suburb</label>
-          <input type="text" id="lf-location" placeholder="e.g. Manly, NSW">
-        </div>
-
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="lf-desc" placeholder="Condition, pickup info, dimensions, why you're selling…"></textarea>
-        </div>
-
-        <button class="btn-post" onclick="submitListing()">POST TO MARKETPLACE</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════
-       VIEW ITEM MODAL (dynamic)
-  ══════════════════════════════════════════ -->
-  <div class="modal-overlay" id="viewModal" onclick="closeOnOverlay(event,'viewModal')">
-    <div class="modal">
-      <div class="modal-image" id="vm-image" style="position:relative;">
-        <button class="close-x" onclick="closeModal('viewModal')">✕</button>
-        <div class="placeholder-img" id="vm-placeholder">🛒</div>
+      <div class="modal-image-strip" id="detail-images">
+        <button class="close-x" onclick="closeDetail()">✕</button>
       </div>
       <div class="modal-body">
-        <div class="modal-category" id="vm-category"></div>
-        <div class="modal-title" id="vm-title"></div>
-        <div class="modal-price" id="vm-price"></div>
-        <div class="modal-desc" id="vm-desc"></div>
+        <div class="modal-category" id="d-category"></div>
+        <div class="modal-title"    id="d-title"></div>
+        <div class="modal-price"    id="d-price"></div>
+        <div class="modal-desc"     id="d-desc"></div>
         <div class="modal-meta">
-          <div class="meta-item"><span class="meta-label">Condition</span><span class="meta-value" id="vm-condition"></span></div>
-          <div class="meta-item"><span class="meta-label">Location</span><span class="meta-value" id="vm-location"></span></div>
-          <div class="meta-item"><span class="meta-label">Seller</span><span class="meta-value" id="vm-seller"></span></div>
+          <div class="meta-item"><span class="meta-label">Condition</span><span class="meta-value" id="d-condition"></span></div>
+          <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value" id="d-type"></span></div>
+          <div class="meta-item"><span class="meta-label">Location</span><span class="meta-value" id="d-location"></span></div>
+          <div class="meta-item"><span class="meta-label">Listed</span><span class="meta-value" id="d-date"></span></div>
         </div>
         <div class="modal-actions">
-          <button class="btn-contact">Contact Seller</button>
-          <button class="btn-close-modal" onclick="closeModal('viewModal')">Close</button>
+          <button class="btn-contact" id="d-contact-btn">Contact Seller</button>
+          <button class="btn-close-modal" onclick="closeDetail()">Close</button>
         </div>
 
-        <!-- Comments -->
+        <!-- COMMENTS -->
         <div class="comments-section">
-          <h4>Comments</h4>
-          <div class="comment-input-row">
-            <input type="text" class="comment-name-input" id="cm-name" placeholder="Your name">
-            <textarea class="comment-text-input" id="cm-text" placeholder="Leave a comment…"></textarea>
-            <button class="comment-submit" onclick="postComment()">Post</button>
+          <div class="comments-heading">
+            Comments <span class="comment-count" id="comment-count"></span>
           </div>
-          <div class="comments-list" id="commentsList"></div>
+
+          <div class="comment-form">
+            <div class="comment-form-row">
+              <input class="comment-input" type="text" id="c-name" placeholder="Your name">
+              <input class="comment-input" type="text" id="c-subject" placeholder="Subject (optional)">
+            </div>
+            <textarea class="comment-input" id="c-text" placeholder="Ask a question or leave a comment..."></textarea>
+            <button class="comment-submit" onclick="submitComment()">Post Comment</button>
+          </div>
+
+          <div class="comments-list" id="comments-list"></div>
         </div>
+
       </div>
     </div>
   </div>
 
+  <!-- ════ CREATE LISTING MODAL ════ -->
+  <div id="create-modal-overlay" onclick="closeCreateOnOverlay(event)">
+    <div class="create-modal">
+      <div class="create-modal-header">
+        <div><h2>List an Item</h2><p>Help your community reuse and share.</p></div>
+        <button class="create-close-x" onclick="closeCreateModal()">✕</button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Title</label>
+        <input class="field-input" type="text" id="f-title" placeholder="e.g. Electric Power Drill" maxlength="80">
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <label class="field-label">Listing Type</label>
+          <div class="type-toggle">
+            <button class="type-btn active" data-type="Sale"   onclick="setType(this)">SALE</button>
+            <button class="type-btn"        data-type="Borrow" onclick="setType(this)">BORROW</button>
+            <button class="type-btn"        data-type="Free"   onclick="setType(this)">FREE</button>
+          </div>
+        </div>
+        <div class="field-group" id="price-group">
+          <label class="field-label">Price ($)</label>
+          <input class="field-input" type="number" id="f-price" placeholder="0" min="0" step="0.01">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Category</label>
+        <select class="field-input" id="f-category">
+          <option value="">Select a category...</option>
+          <option>Tools</option><option>Furniture</option><option>Household</option>
+          <option>Garden</option><option>Electronics</option><option>Clothing</option>
+          <option>Sports &amp; Outdoors</option><option>Books &amp; Media</option>
+          <option>Toys &amp; Games</option><option>Other</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Condition</label>
+        <div class="condition-grid">
+          <button class="condition-btn active" data-cond="New"       onclick="setCondition(this)">✨ New</button>
+          <button class="condition-btn"        data-cond="Like New"  onclick="setCondition(this)">👍 Like New</button>
+          <button class="condition-btn"        data-cond="Good"      onclick="setCondition(this)">✅ Good</button>
+          <button class="condition-btn"        data-cond="Fair"      onclick="setCondition(this)">🔧 Fair</button>
+          <button class="condition-btn"        data-cond="Poor"      onclick="setCondition(this)">⚠️ Poor</button>
+          <button class="condition-btn"        data-cond="For Parts" onclick="setCondition(this)">🔩 For Parts</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Description</label>
+        <textarea class="field-input" id="f-description" placeholder="Condition, pickup info, dimensions, brand, reason for selling..."></textarea>
+      </div>
+
+      <div class="form-divider"></div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <label class="field-label">Suburb / Location</label>
+          <input class="field-input" type="text" id="f-location" placeholder="e.g. Surry Hills">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Contact</label>
+          <input class="field-input" type="text" id="f-contact" placeholder="Phone or email">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Photos (up to 5)</label>
+        <div class="image-upload-area">
+          <input type="file" id="f-images" accept="image/*" multiple onchange="handleImages(this)">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text"><strong>Click to upload</strong> or drag &amp; drop</div>
+        </div>
+        <div id="image-preview-grid"></div>
+      </div>
+
+      <button class="submit-btn" onclick="submitListing()">Post to Marketplace</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
   <script>
-    // ── State ──────────────────────────────────────
-    let listings = JSON.parse(localStorage.getItem('mp_listings') || '[]');
-    let comments = JSON.parse(localStorage.getItem('mp_comments') || '{}');
-    let currentListingId = null;
-    let currentType = 'sale';
-
-    function saveListings() { localStorage.setItem('mp_listings', JSON.stringify(listings)); }
-    function saveComments() { localStorage.setItem('mp_comments', JSON.stringify(comments)); }
-
-    // ── Render grid ────────────────────────────────
-    function renderGrid() {
-      const q = document.getElementById('searchInput').value.toLowerCase();
-      const cat = document.getElementById('filterCategory').value;
-      const grid = document.getElementById('marketGrid');
-
-      let filtered = listings.filter(l => {
-        const matchQ = !q || l.title.toLowerCase().includes(q) || l.desc.toLowerCase().includes(q) || l.category.toLowerCase().includes(q);
-        const matchCat = !cat || l.category === cat;
-        return matchQ && matchCat;
-      });
-
-      document.getElementById('listingCount').textContent = filtered.length + ' item' + (filtered.length !== 1 ? 's' : '');
-
-      if (filtered.length === 0) {
-        grid.innerHTML = '<div class="no-results">' + (listings.length === 0 ? 'No listings yet — be the first to post!' : 'No items match your search.') + '</div>';
-        return;
+    // ════════════════════════════
+    // SEED DATA
+    // ════════════════════════════
+    const SEED_LISTINGS = [
+      {
+        id: 1000001, title: 'Vintage Timber Bookshelf', category: 'Furniture', type: 'Sale',
+        price: '$45.00', condition: 'Good',
+        description: 'Solid timber bookshelf, 5 shelves, approx 180cm tall. Has a few minor scuffs on the base but otherwise in great shape. Perfect for a study or living room. Can help load into a ute.',
+        location: 'Newtown, NSW', contact: '0412 345 678', date: '18 May 2026', images: [], seedBg: 'seed-bg-1', seedIcon: '📚'
+      },
+      {
+        id: 1000002, title: 'Ryobi Cordless Drill Set', category: 'Tools', type: 'Sale',
+        price: '$80.00', condition: 'Like New',
+        description: 'Ryobi 18V cordless drill with 2 batteries and charger. Only used twice — bought for a renovation that never happened. Comes with original case and a full set of drill bits.',
+        location: 'Parramatta, NSW', contact: '0498 765 432', date: '17 May 2026', images: [], seedBg: 'seed-bg-2', seedIcon: '🔧'
+      },
+      {
+        id: 1000003, title: 'Weber Baby Q BBQ', category: 'Garden', type: 'Sale',
+        price: '$120.00', condition: 'Good',
+        description: 'Weber Baby Q in good working order. Has been well used but cleaned regularly. Includes the fold-out side tables and a spare gas bottle. Ideal for balconies or small outdoor areas.',
+        location: 'Bondi, NSW', contact: '0455 111 222', date: '16 May 2026', images: [], seedBg: 'seed-bg-3', seedIcon: '🔥'
+      },
+      {
+        id: 1000004, title: 'Moving Boxes — Free to Take', category: 'Household', type: 'Free',
+        price: 'Free', condition: 'Fair',
+        description: 'Approximately 30 moving boxes in various sizes, some double-walled. Just moved in and don\'t need them. Must take all. Available from Saturday morning. Bring your own car or van.',
+        location: 'Surry Hills, NSW', contact: 'sarah.m@email.com', date: '15 May 2026', images: [], seedBg: 'seed-bg-4', seedIcon: '📦'
+      },
+      {
+        id: 1000005, title: 'Trek Marlin 5 Mountain Bike', category: 'Sports & Outdoors', type: 'Sale',
+        price: '$350.00', condition: 'Good',
+        description: 'Trek Marlin 5 in matte black, medium frame, 29" wheels. Recently had a full service — new brake pads, cables and chain. Selling because I upgraded. Suits rider 170–185cm.',
+        location: 'Chatswood, NSW', contact: '0421 999 888', date: '14 May 2026', images: [], seedBg: 'seed-bg-5', seedIcon: '🚲'
+      },
+      {
+        id: 1000006, title: 'Lawn Mower — Borrow Anytime', category: 'Garden', type: 'Borrow',
+        price: 'Borrow', condition: 'Good',
+        description: 'Happy to lend my Victa petrol mower to neighbours. Works well, just needs a splash of fuel. Please return clean and with the fuel topped up. Weekends only, collect from my place.',
+        location: 'Leichhardt, NSW', contact: '0433 444 555', date: '13 May 2026', images: [], seedBg: 'seed-bg-6', seedIcon: '🌿'
       }
+    ];
 
-      grid.innerHTML = filtered.map(l => {
-        const badgeClass = l.type === 'free' ? 'badge-free' : l.type === 'borrow' ? 'badge-borrow' : 'badge-sale';
-        const badgeLabel = l.type === 'free' ? 'FREE' : l.type === 'borrow' ? 'BORROW' : 'SALE';
-        const priceStr = l.type === 'free' ? 'Free' : l.type === 'borrow' ? 'Borrow' : '$' + parseFloat(l.price || 0).toFixed(2);
-        const cmCount = (comments[l.id] || []).length;
+    const SEED_IDS = SEED_LISTINGS.map(l => l.id);
+
+    // ════════════════════════════
+    // STORAGE HELPERS
+    // ════════════════════════════
+    function getListings() {
+      const user = JSON.parse(localStorage.getItem('marketplace_listings') || '[]');
+      return [...user, ...SEED_LISTINGS];
+    }
+
+    function getUserListings() {
+      return JSON.parse(localStorage.getItem('marketplace_listings') || '[]');
+    }
+
+    function saveUserListings(arr) {
+      localStorage.setItem('marketplace_listings', JSON.stringify(arr));
+    }
+
+    // Comments stored as { listingId: [ {id, name, subject, text, date} ] }
+    function getComments(listingId) {
+      const all = JSON.parse(localStorage.getItem('marketplace_comments') || '{}');
+      return all[listingId] || [];
+    }
+
+    function saveComment(listingId, comment) {
+      const all = JSON.parse(localStorage.getItem('marketplace_comments') || '{}');
+      if (!all[listingId]) all[listingId] = [];
+      all[listingId].unshift(comment);
+      localStorage.setItem('marketplace_comments', JSON.stringify(all));
+    }
+
+    function deleteComment(listingId, commentId) {
+      const all = JSON.parse(localStorage.getItem('marketplace_comments') || '{}');
+      if (!all[listingId]) return;
+      all[listingId] = all[listingId].filter(c => c.id !== commentId);
+      localStorage.setItem('marketplace_comments', JSON.stringify(all));
+    }
+
+    // ════════════════════════════
+    // RENDER GRID
+    // ════════════════════════════
+    function renderGrid() {
+      const listings = getListings();
+      const grid     = document.getElementById('marketplace-grid');
+      const count    = document.getElementById('listing-count');
+
+      count.textContent = listings.length + ' item' + (listings.length !== 1 ? 's' : '');
+
+      grid.innerHTML = listings.map(l => {
+        const isSeed = SEED_IDS.includes(l.id);
+        const imgHTML = (l.images && l.images[0])
+          ? `<img src="${l.images[0]}" alt="${l.title}">`
+          : `<div class="card-image-placeholder ${isSeed ? l.seedBg : ''}">
+               <span class="placeholder-icon">${isSeed ? l.seedIcon : '📦'}</span>
+               <span class="placeholder-label">${l.category}</span>
+             </div>`;
+
+        const badgeClass = l.type === 'Free' ? 'badge-free' : l.type === 'Borrow' ? 'badge-borrow' : 'badge-sale';
+        const commentCount = getComments(l.id).length;
+
         return `
-          <div class="card" onclick="openViewModal('${l.id}')">
-            <div class="card-image">
-              <div class="placeholder-img">📦</div>
-              <span class="badge ${badgeClass}">${badgeLabel}</span>
-            </div>
+          <div class="card" onclick="openDetail(${l.id})">
+            <div class="card-image">${imgHTML}</div>
             <div class="card-body">
               <div class="card-category">${l.category}</div>
-              <div class="card-title">${escHtml(l.title)}</div>
-              <div class="card-desc">${escHtml(l.desc)}</div>
+              <div class="card-title">${l.title}</div>
+              <div class="card-desc">${l.description}</div>
               <div class="card-footer">
-                <div class="card-price">${priceStr} <span>${l.type === 'sale' ? 'ono' : ''}</span></div>
-                <button class="view-btn">View Details ${cmCount > 0 ? '💬'+cmCount : ''}</button>
+                <div class="card-price">${l.price}</div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  ${commentCount > 0 ? `<span style="font-size:12px;color:#888">💬 ${commentCount}</span>` : ''}
+                  <span class="card-badge ${badgeClass}">${l.type}</span>
+                  <button class="view-btn">View Details</button>
+                </div>
               </div>
             </div>
           </div>`;
       }).join('');
     }
 
-    // ── List item form ──────────────────────────────
-    function setType(btn, type) {
-      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentType = type;
-      document.getElementById('priceGroup').style.display = type === 'free' ? 'none' : 'flex';
-    }
+    // ════════════════════════════
+    // DETAIL MODAL
+    // ════════════════════════════
+    let currentListingId  = null;
+    let currentImgIndex   = 0;
+    let currentDetailImgs = [];
 
-    function openListModal() {
-      document.getElementById('listModal').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function submitListing() {
-      const title = document.getElementById('lf-title').value.trim();
-      const name = document.getElementById('lf-name').value.trim();
-      if (!title) { alert('Please enter a title for your listing.'); return; }
-      if (!name) { alert('Please enter your name.'); return; }
-
-      const listing = {
-        id: 'l_' + Date.now(),
-        title,
-        seller: name,
-        desc: document.getElementById('lf-desc').value.trim() || 'No description provided.',
-        category: document.getElementById('lf-category').value,
-        condition: document.getElementById('lf-condition').value,
-        location: document.getElementById('lf-location').value.trim() || 'Not specified',
-        price: document.getElementById('lf-price').value || '0',
-        type: currentType,
-        date: new Date().toLocaleDateString('en-AU')
-      };
-
-      listings.unshift(listing);
-      saveListings();
-      closeModal('listModal');
-      resetListForm();
-      renderGrid();
-    }
-
-    function resetListForm() {
-      ['lf-title','lf-name','lf-desc','lf-location','lf-price'].forEach(id => document.getElementById(id).value = '');
-      document.getElementById('lf-category').selectedIndex = 0;
-      document.getElementById('lf-condition').selectedIndex = 2;
-      setType(document.querySelectorAll('.type-btn')[0], 'sale');
-    }
-
-    // ── View modal ──────────────────────────────────
-    function openViewModal(id) {
-      const l = listings.find(x => x.id === id);
+    function openDetail(id) {
+      const l = getListings().find(x => x.id === id);
       if (!l) return;
       currentListingId = id;
 
-      const typeLabel = l.type === 'free' ? 'Free' : l.type === 'borrow' ? 'For Borrow' : '$' + parseFloat(l.price || 0).toFixed(2);
-      const typeSub = l.type === 'sale' ? ' <span>or nearest offer</span>' : '';
+      document.getElementById('d-category').textContent  = l.category;
+      document.getElementById('d-title').textContent     = l.title;
+      document.getElementById('d-price').textContent     = l.price;
+      document.getElementById('d-desc').textContent      = l.description;
+      document.getElementById('d-condition').textContent = l.condition;
+      document.getElementById('d-type').textContent      = l.type;
+      document.getElementById('d-location').textContent  = l.location || '—';
+      document.getElementById('d-date').textContent      = l.date;
 
-      document.getElementById('vm-category').textContent = l.category;
-      document.getElementById('vm-title').textContent = l.title;
-      document.getElementById('vm-price').innerHTML = typeLabel + typeSub;
-      document.getElementById('vm-desc').textContent = l.desc;
-      document.getElementById('vm-condition').textContent = l.condition;
-      document.getElementById('vm-location').textContent = l.location;
-      document.getElementById('vm-seller').textContent = l.seller;
+      const contactBtn = document.getElementById('d-contact-btn');
+      if (l.contact) {
+        contactBtn.textContent = 'Contact: ' + l.contact;
+        contactBtn.onclick = () => {
+          if (l.contact.includes('@')) window.location = 'mailto:' + l.contact;
+          else window.location = 'tel:' + l.contact.replace(/\s/g,'');
+        };
+      } else {
+        contactBtn.textContent = 'Contact Seller';
+        contactBtn.onclick = null;
+      }
 
+      currentDetailImgs = (l.images && l.images.length) ? l.images : [];
+      currentImgIndex   = 0;
+      renderDetailImages(l);
       renderComments();
-      document.getElementById('viewModal').classList.add('open');
+
+      document.getElementById('detail-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
-    // ── Comments ────────────────────────────────────
-    function postComment() {
-      const name = document.getElementById('cm-name').value.trim();
-      const text = document.getElementById('cm-text').value.trim();
-      if (!name || !text) { alert('Please enter your name and a comment.'); return; }
-      if (!comments[currentListingId]) comments[currentListingId] = [];
-      comments[currentListingId].push({ name, text, time: new Date().toLocaleString('en-AU') });
-      saveComments();
-      document.getElementById('cm-text').value = '';
-      renderComments();
-      renderGrid(); // update comment count badge
-    }
+    function renderDetailImages(l) {
+      const strip = document.getElementById('detail-images');
+      const imgs  = currentDetailImgs;
 
-    function renderComments() {
-      const list = comments[currentListingId] || [];
-      const el = document.getElementById('commentsList');
-      if (list.length === 0) {
-        el.innerHTML = '<div class="no-comments">No comments yet. Be the first!</div>';
+      if (!imgs.length) {
+        const ref = l || SEED_LISTINGS.find(s => s.id === currentListingId);
+        const isSeed = ref && SEED_IDS.includes(ref.id);
+        strip.innerHTML = `
+          <button class="close-x" onclick="closeDetail()">✕</button>
+          <div class="no-img ${isSeed && ref ? ref.seedBg : ''}">
+            <span style="font-size:64px">${isSeed && ref ? ref.seedIcon : '📦'}</span>
+            <span style="font-size:13px;color:#888">No photos uploaded</span>
+          </div>`;
         return;
       }
-      el.innerHTML = list.map(c => `
-        <div class="comment-item">
-          <span class="comment-author">${escHtml(c.name)}</span>
-          <span class="comment-time">${c.time}</span>
-          <div class="comment-text">${escHtml(c.text)}</div>
-        </div>`).join('');
+
+      const dots = imgs.length > 1
+        ? `<div class="img-nav">${imgs.map((_,i) =>
+            `<button class="img-dot ${i===currentImgIndex?'active':''}" onclick="goImg(${i})"></button>`
+          ).join('')}</div>` : '';
+
+      const arrows = imgs.length > 1
+        ? `<button class="img-prev" onclick="goImg(${currentImgIndex-1})">❮</button>
+           <button class="img-next" onclick="goImg(${currentImgIndex+1})">❯</button>` : '';
+
+      strip.innerHTML = `
+        <button class="close-x" onclick="closeDetail()">✕</button>
+        <img src="${imgs[currentImgIndex]}" alt="listing">${arrows}${dots}`;
     }
 
-    // ── Helpers ─────────────────────────────────────
-    function escHtml(s) {
-      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    function goImg(i) {
+      const len = currentDetailImgs.length;
+      currentImgIndex = ((i % len) + len) % len;
+      renderDetailImages();
     }
 
-    function openModal(id) {
-      document.getElementById(id).classList.add('open');
+    function closeDetail() {
+      document.getElementById('detail-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      // clear comment inputs
+      document.getElementById('c-name').value = '';
+      document.getElementById('c-subject').value = '';
+      document.getElementById('c-text').value = '';
+      currentListingId = null;
+    }
+
+    function closeDetailOnOverlay(e) {
+      if (e.target === document.getElementById('detail-overlay')) closeDetail();
+    }
+
+    // ════════════════════════════
+    // COMMENTS
+    // ════════════════════════════
+    function renderComments() {
+      const comments = getComments(currentListingId);
+      const list     = document.getElementById('comments-list');
+      const countEl  = document.getElementById('comment-count');
+
+      countEl.textContent = comments.length > 0 ? `(${comments.length})` : '';
+
+      if (comments.length === 0) {
+        list.innerHTML = `<div class="no-comments">No comments yet — be the first to ask a question!</div>`;
+        return;
+      }
+
+      list.innerHTML = comments.map(c => {
+        const initials = c.name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2) || '?';
+        return `
+          <div class="comment-item" id="comment-${c.id}">
+            <div class="comment-header">
+              <div class="comment-author">
+                <div class="comment-avatar">${initials}</div>
+                <span>${escapeHtml(c.name)}</span>
+                ${c.subject ? `<span style="font-size:12px;color:#aaa;font-weight:300">· ${escapeHtml(c.subject)}</span>` : ''}
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span class="comment-date">${c.date}</span>
+                <button class="comment-delete" onclick="removeComment(${c.id})" title="Delete">🗑</button>
+              </div>
+            </div>
+            <div class="comment-text">${escapeHtml(c.text)}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function submitComment() {
+      if (!currentListingId) return;
+      const name    = document.getElementById('c-name').value.trim();
+      const subject = document.getElementById('c-subject').value.trim();
+      const text    = document.getElementById('c-text').value.trim();
+
+      if (!name) { showToast('Please enter your name', 'error'); return; }
+      if (!text) { showToast('Please enter a comment', 'error'); return; }
+
+      const comment = {
+        id:      Date.now(),
+        name, subject, text,
+        date: new Date().toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })
+      };
+
+      saveComment(currentListingId, comment);
+      document.getElementById('c-name').value    = '';
+      document.getElementById('c-subject').value = '';
+      document.getElementById('c-text').value    = '';
+      renderComments();
+      renderGrid(); // update comment count badge on card
+      showToast('Comment posted!', 'success');
+    }
+
+    function removeComment(commentId) {
+      deleteComment(currentListingId, commentId);
+      renderComments();
+      renderGrid();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ════════════════════════════
+    // CREATE LISTING MODAL
+    // ════════════════════════════
+    let selectedType      = 'Sale';
+    let selectedCondition = 'New';
+    let uploadedImages    = [];
+
+    function openCreateModal() {
+      document.getElementById('create-modal-overlay').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
+    function closeCreateModal() {
+      document.getElementById('create-modal-overlay').classList.remove('open');
       document.body.style.overflow = '';
     }
 
-    function closeOnOverlay(e, id) {
-      if (e.target === document.getElementById(id)) closeModal(id);
+    function closeCreateOnOverlay(e) {
+      if (e.target === document.getElementById('create-modal-overlay')) closeCreateModal();
+    }
+
+    function setType(btn) {
+      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedType = btn.dataset.type;
+      document.getElementById('price-group').classList.toggle('hidden', selectedType !== 'Sale');
+      if (selectedType !== 'Sale') document.getElementById('f-price').value = '';
+    }
+
+    function setCondition(btn) {
+      document.querySelectorAll('.condition-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedCondition = btn.dataset.cond;
+    }
+
+    function handleImages(input) {
+      const files     = Array.from(input.files);
+      const remaining = 5 - uploadedImages.length;
+      files.slice(0, remaining).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => { uploadedImages.push(e.target.result); renderPreviews(); };
+        reader.readAsDataURL(file);
+      });
+      if (files.length > remaining) showToast('Max 5 images allowed', 'error');
+    }
+
+    function renderPreviews() {
+      document.getElementById('image-preview-grid').innerHTML =
+        uploadedImages.map((src, i) => `
+          <div class="preview-thumb">
+            <img src="${src}" alt="Preview">
+            <button class="thumb-remove" onclick="removeImage(${i})">✕</button>
+          </div>`).join('');
+    }
+
+    function removeImage(i) { uploadedImages.splice(i, 1); renderPreviews(); }
+
+    function submitListing() {
+      const title       = document.getElementById('f-title').value.trim();
+      const price       = document.getElementById('f-price').value;
+      const category    = document.getElementById('f-category').value;
+      const description = document.getElementById('f-description').value.trim();
+      const location    = document.getElementById('f-location').value.trim();
+      const contact     = document.getElementById('f-contact').value.trim();
+
+      if (!title)    { showToast('Please add a title', 'error');       return; }
+      if (!category) { showToast('Please select a category', 'error'); return; }
+      if (selectedType === 'Sale' && !price) { showToast('Please enter a price', 'error'); return; }
+
+      const priceLabel =
+        selectedType === 'Free'   ? 'Free' :
+        selectedType === 'Borrow' ? 'Borrow' :
+        '$' + parseFloat(price).toFixed(2);
+
+      const listing = {
+        id: Date.now(), title, category, description, location, contact,
+        type: selectedType, condition: selectedCondition, price: priceLabel,
+        images: [...uploadedImages],
+        date: new Date().toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' })
+      };
+
+      const all = getUserListings();
+      all.unshift(listing);
+      saveUserListings(all);
+
+      showToast('Listing posted! ✓', 'success');
+      resetForm();
+      closeCreateModal();
+      renderGrid();
+    }
+
+    function resetForm() {
+      ['f-title','f-price','f-description','f-location','f-contact'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      document.getElementById('f-category').value = '';
+      document.getElementById('image-preview-grid').innerHTML = '';
+      uploadedImages = []; selectedType = 'Sale'; selectedCondition = 'New';
+      document.querySelectorAll('.type-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+      document.querySelectorAll('.condition-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+      document.getElementById('price-group').classList.remove('hidden');
+    }
+
+    function showToast(msg, type = '') {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = 'toast' + (type ? ' ' + type : '');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
     }
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(m => {
-          m.classList.remove('open');
-          document.body.style.overflow = '';
-        });
-      }
+      if (e.key !== 'Escape') return;
+      closeDetail(); closeCreateModal();
     });
 
-    // ── Init ────────────────────────────────────────
     renderGrid();
   </script>
+
 </body>
 </html>
