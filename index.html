@@ -16,19 +16,110 @@
       color: #333;
     }
 
-    nav a img {
-      height: clamp(40px, 5vw, 66px);
-      width: auto;
+    /* ══════════════════════════════════
+       TOP NAVIGATION — complete overhaul
+       ══════════════════════════════════ */
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 70px;
+      background: #0a1f0a;
+      position: sticky;
+      top: 0;
+      z-index: 200;
     }
 
-    .shadow-line {
-      border: none;
-      background-color: #006400;
+    .nav-logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+
+    .nav-logo-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #e8f0e8;
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+
+    .nav-logo-wordmark em {
+      font-style: italic;
+      color: #7ec87e;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #b8ccb8;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 6px;
+      display: block;
+      position: relative;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 18px;
+      right: 18px;
       height: 1px;
-      width: 100%;
-      box-shadow: 2px 6px 8px rgba(0, 0, 0, 0.6);
-      margin-top: 15px;
-      margin-bottom: 15px;
+      background: #7ec87e;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links li a:hover {
+      color: #e8f0e8;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav-links li a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-links li a.active {
+      color: #0a1f0a;
+      background: #7ec87e;
+      font-weight: 500;
+    }
+
+    .nav-links li a.active::after {
+      display: none;
+    }
+
+    .shadow-line { display: none; }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; height: 60px; }
+      .nav-logo-wordmark { display: none; }
+      .nav-links li a { padding: 7px 11px; font-size: 12px; letter-spacing: 0.04em; }
     }
 
     .hero-section {
@@ -189,26 +280,19 @@
 </head>
 <body>
 
-  <!-- Nav -->
+    <!-- Nav -->
   <nav>
-    <a href="index.html">
+    <a href="index.html" class="nav-logo">
       <img src="Images/Logo.png" alt="Logo"/>
+      <span class="nav-logo-wordmark">Second<em>hand</em></span>
     </a>
-    <a href="Market.html">
-      <img src="Images/button_cars.png" alt="Cars"/>
-    </a>
-    <a href="Polls.html">
-      <img src="Images/button_companies.png" alt="Companies"/>
-    </a>
-    <a href="Comments.html">
-      <img src="Images/button_comments.png" alt="Comments"/>
-    </a>
-    <a href="Videos.html">
-      <img src="Images/button_videos.png" alt="Videos"/>
-    </a>
+    <ul class="nav-links">
+      <li><a href="Market.html">Market</a></li>
+      <li><a href="Polls.html">Polls</a></li>
+      <li><a href="AboutUs.html">About Us</a></li>
+      <li><a href="Guide.html">Guide</a></li>
+    </ul>
   </nav>
-
-  <hr class="shadow-line">
 
   <!-- Hero -->
   <section class="hero-section">

@@ -14,11 +14,170 @@
       min-height: 100vh;
     }
 
-    nav a img { height: clamp(40px, 5vw, 66px); width: auto; }
+    /* ══════════════════════════════════
+       TOP NAVIGATION — complete overhaul
+       ══════════════════════════════════ */
 
-    .shadow-line {
-      border: none; background-color: #006400; height: 2px; width: 100%;
-      box-shadow: 2px 6px 8px rgba(0,0,0,0.6); margin-top: 15px; margin-bottom: 30px;
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 70px;
+      background: #0a1f0a;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+
+    .nav-logo-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #e8f0e8;
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+
+    .nav-logo-wordmark em {
+      font-style: italic;
+      color: #7ec87e;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #b8ccb8;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 6px;
+      display: block;
+      position: relative;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 18px;
+      right: 18px;
+      height: 1px;
+      background: #7ec87e;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links li a:hover {
+      color: #e8f0e8;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav-links li a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-links li a.active {
+      color: #0a1f0a;
+      background: #7ec87e;
+      font-weight: 500;
+    }
+
+    .nav-links li a.active::after {
+      display: none;
+    }
+
+    .shadow-line { display: none; }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; height: 60px; }
+      .nav-logo-wordmark { display: none; }
+      .nav-links li a { padding: 7px 11px; font-size: 12px; letter-spacing: 0.04em; }
+    }
+
+
+    /* ── Search bar ── */
+    .search-bar-wrap {
+      max-width: 1300px;
+      margin: 28px auto 0;
+      padding: 0 40px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 2px solid #e4e8ee;
+      border-radius: 12px;
+      padding: 0 16px;
+      gap: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-bar:focus-within {
+      border-color: #006400;
+      box-shadow: 0 0 0 3px rgba(0,100,0,0.08);
+    }
+
+    .search-bar svg {
+      flex-shrink: 0;
+      color: #aaa;
+    }
+
+    .search-bar input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: #1a1a1a;
+      padding: 14px 0;
+      background: transparent;
+    }
+
+    .search-bar input::placeholder { color: #b0b8c4; }
+
+    .search-clear {
+      background: none;
+      border: none;
+      color: #bbb;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px;
+      display: none;
+      line-height: 1;
+    }
+
+    .search-clear.visible { display: block; }
+    .search-clear:hover { color: #555; }
+
+    @media (max-width: 700px) {
+      .search-bar-wrap { padding: 0 20px; margin-top: 20px; }
     }
 
     .page-heading {
@@ -445,15 +604,29 @@
 </head>
 <body>
 
-  <nav>
-    <a href="index.html"><img src="Images/Logo.png" alt="Logo"/></a>
-    <a href="test.html"><img src="Images/button_cars.png" alt="Cars"/></a>
-    <a href="Companies.html"><img src="Images/button_companies.png" alt="Companies"/></a>
-    <a href="Comments.html"><img src="Images/button_comments.png" alt="Comments"/></a>
-    <a href="Videos.html"><img src="Images/button_videos.png" alt="Videos"/></a>
+    <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="Images/Logo.png" alt="Logo"/>
+      <span class="nav-logo-wordmark">Second<em>hand</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="Market.html" class="active">Market</a></li>
+      <li><a href="Polls.html">Polls</a></li>
+      <li><a href="AboutUs.html">About Us</a></li>
+      <li><a href="Guide.html">Guide</a></li>
+    </ul>
   </nav>
 
   <hr class="shadow-line">
+
+  <!-- Search Bar -->
+  <div class="search-bar-wrap">
+    <div class="search-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Search listings by title, category or description…" oninput="handleSearch(this)">
+      <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+    </div>
+  </div>
 
   <div class="page-heading">
     <div class="heading-left">
@@ -678,12 +851,44 @@
     // ════════════════════════════
     // RENDER GRID
     // ════════════════════════════
+    let currentSearchQuery = '';
+
+    function handleSearch(input) {
+      currentSearchQuery = input.value.trim().toLowerCase();
+      document.getElementById('search-clear').classList.toggle('visible', currentSearchQuery.length > 0);
+      renderGrid();
+    }
+
+    function clearSearch() {
+      document.getElementById('search-input').value = '';
+      currentSearchQuery = '';
+      document.getElementById('search-clear').classList.remove('visible');
+      renderGrid();
+    }
+
     function renderGrid() {
-      const listings = getListings();
-      const grid     = document.getElementById('marketplace-grid');
-      const count    = document.getElementById('listing-count');
+      let listings = getListings();
+
+      if (currentSearchQuery) {
+        listings = listings.filter(l =>
+          l.title.toLowerCase().includes(currentSearchQuery) ||
+          l.category.toLowerCase().includes(currentSearchQuery) ||
+          (l.description && l.description.toLowerCase().includes(currentSearchQuery)) ||
+          (l.location && l.location.toLowerCase().includes(currentSearchQuery))
+        );
+      }
+
+      const grid  = document.getElementById('marketplace-grid');
+      const count = document.getElementById('listing-count');
 
       count.textContent = listings.length + ' item' + (listings.length !== 1 ? 's' : '');
+
+      if (listings.length === 0) {
+        grid.innerHTML = currentSearchQuery
+          ? `<div class="empty-grid"><div class="empty-icon">🔍</div><p>No results for "${currentSearchQuery}"</p><span>Try a different keyword or category</span></div>`
+          : `<div class="empty-grid"><div class="empty-icon">📭</div><p>No listings yet</p><span>Be the first to list something!</span></div>`;
+        return;
+      }
 
       grid.innerHTML = listings.map(l => {
         const isSeed = SEED_IDS.includes(l.id);
