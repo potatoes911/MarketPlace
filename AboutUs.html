@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Secondhand</title>
+  <link rel="stylesheet" href="Test.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #f7f9fc;
+      color: #333;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ══════════════════════════════════
+       TOP NAVIGATION
+       ══════════════════════════════════ */
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 70px;
+      background: #0a1f0a;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+
+    .nav-logo-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #e8f0e8;
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+
+    .nav-logo-wordmark em {
+      font-style: italic;
+      color: #7ec87e;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #b8ccb8;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 6px;
+      display: block;
+      position: relative;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 18px;
+      right: 18px;
+      height: 1px;
+      background: #7ec87e;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links li a:hover {
+      color: #e8f0e8;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav-links li a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-links li a.active {
+      color: #0a1f0a;
+      background: #7ec87e;
+      font-weight: 500;
+    }
+
+    .nav-links li a.active::after {
+      display: none;
+    }
+
+    .shadow-line { display: none; }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; height: 60px; }
+      .nav-logo-wordmark { display: none; }
+      .nav-links li a { padding: 7px 11px; font-size: 12px; letter-spacing: 0.04em; }
+    }
+
+    /* ══════════════════════════════════
+       ABOUT US PAGE CONTENT
+       ══════════════════════════════════ */
+
+    .about-wrapper {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 40px;
+      flex: 1;
+    }
+
+    .about-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .about-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 46px);
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+
+    .about-header p {
+      font-size: clamp(16px, 2vw, 20px);
+      color: #666;
+      max-width: 650px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+
+    .about-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      border-top: 4px solid #006400;
+    }
+
+    .about-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .about-card .icon {
+      font-size: 36px;
+      margin-bottom: 18px;
+    }
+
+    .about-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #1a1a1a;
+      margin-bottom: 14px;
+    }
+
+    .about-card p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .full-width-card {
+      grid-column: 1 / -1;
+      background: #006400;
+      color: #fff;
+      border-top: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .full-width-card h3 {
+      color: #fff;
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+
+    .full-width-card p {
+      color: #d4e8d4;
+      max-width: 800px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 800px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+      .about-wrapper {
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      .about-card {
+        padding: 30px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="Images/Logo.png" alt="Logo"/>
+      <span class="nav-logo-wordmark">Second<em>hand</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="Market.html">Market</a></li>
+      <li><a href="Polls.html">Polls</a></li>
+      <li><a href="AboutUs.html" class="active">About Us</a></li>
+      <li><a href="Guide.html">Guide</a></li>
+    </ul>
+  </nav>
+
+  <hr class="shadow-line">
+
+  <!-- About Content -->
+  <div class="about-wrapper">
+    <div class="about-header">
+      <h1>One man's trash is another man's treasure.</h1>
+      <p>An interactive marketplace designed for sharing, renting, and finding a new home for items.</p>
+    </div>
+
+    <div class="about-grid">
+      
+      <!-- Card 1: The Problem -->
+      <div class="about-card">
+        <div class="icon">🗑️</div>
+        <h3>The Problem We Face</h3>
+        <p>
+          Every day, items that are no longer valued are either binned or sent straight to landfill. Many people have appliances, furniture, and other goods that they no longer use or only required for a one-time occasion. Because of this, perfectly good items gather dust or go to waste unnecessarily.
+        </p>
+      </div>
+
+      <!-- Card 2: The Solution -->
+      <div class="about-card">
+        <div class="icon">♻️</div>
+        <h3>Our Solution</h3>
+        <p>
+          We created a central location for individuals to list their items to be purchased cheaply, given away for free, or rented. By improving the volume, velocity, and variety of options available to consumers, this marketplace reduces the amount of junk ending up in landfills.
+        </p>
+      </div>
+
+      <!-- Card 3: New Homeowners -->
+      <div class="about-card">
+        <div class="icon">🏠</div>
+        <h3>Helping New Homeowners</h3>
+        <p>
+          Setting up a new home can be incredibly expensive. This platform serves as an item-sharing and sales hub where new homeowners can find affordable, gently-used items that are still in fantastic condition, helping them save money while living sustainably.
+        </p>
+      </div>
+
+      <!-- Card 4: Renting Equipment -->
+      <div class="about-card">
+        <div class="icon">🛠️</div>
+        <h3>Leasing and One-Time Use</h3>
+        <p>
+          Sometimes you only need a specific tool once, like an expensive hand drill for a quick home repair. Purchasing it brand new wouldn't be financially viable. Secondhand allows individuals to lease equipment, making high-quality tools accessible without the steep price tag.
+        </p>
+      </div>
+
+      <!-- Card 5: Enterprise Project (Full Width) -->
+      <div class="about-card full-width-card">
+        <div class="icon">💻</div>
+        <h3>An Enterprise Computing Project</h3>
+        <p>
+          This website was developed as an Enterprise Computing assessment task aimed at identifying a real-world problem and addressing it through an enterprise project. Secondhand supports the idea of selling cheap "junk" so others can use it, proving that with the right platform, sharing resources benefits both the community and the environment.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

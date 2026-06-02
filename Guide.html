@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Guide - Secondhand</title>
+  <link rel="stylesheet" href="Test.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #f7f9fc;
+      color: #333;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ══════════════════════════════════
+       TOP NAVIGATION
+       ══════════════════════════════════ */
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 70px;
+      background: #0a1f0a;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+
+    .nav-logo-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #e8f0e8;
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+
+    .nav-logo-wordmark em {
+      font-style: italic;
+      color: #7ec87e;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      list-style: none;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #b8ccb8;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border-radius: 6px;
+      display: block;
+      position: relative;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .nav-links li a::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 18px;
+      right: 18px;
+      height: 1px;
+      background: #7ec87e;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-links li a:hover {
+      color: #e8f0e8;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .nav-links li a:hover::after {
+      transform: scaleX(1);
+    }
+
+    .nav-links li a.active {
+      color: #0a1f0a;
+      background: #7ec87e;
+      font-weight: 500;
+    }
+
+    .nav-links li a.active::after {
+      display: none;
+    }
+
+    .shadow-line { display: none; }
+
+    @media (max-width: 700px) {
+      nav { padding: 0 20px; height: 60px; }
+      .nav-logo-wordmark { display: none; }
+      .nav-links li a { padding: 7px 11px; font-size: 12px; letter-spacing: 0.04em; }
+    }
+
+    /* ══════════════════════════════════
+       GUIDE PAGE CONTENT
+       ══════════════════════════════════ */
+
+    .guide-wrapper {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 0 40px 80px;
+      flex: 1;
+    }
+
+    .guide-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .guide-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 46px);
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+
+    .guide-header p {
+      font-size: clamp(16px, 2vw, 20px);
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    .guide-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .guide-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      border-left: 4px solid #006400;
+    }
+
+    .guide-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .step-icon {
+      background: #e8f5e8;
+      color: #006400;
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-content h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+
+    .step-content p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .step-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Badges for visual context in text */
+    .inline-badge {
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: inline-block;
+      margin: 0 4px;
+      vertical-align: middle;
+    }
+    
+    .badge-sale   { background: #e8f5e8; color: #006400; }
+    .badge-free   { background: #fff3cd; color: #856404; }
+    .badge-borrow { background: #e1f0ff; color: #0061fe; }
+
+    @media (max-width: 600px) {
+      .guide-wrapper { margin: 40px auto; padding: 0 20px; }
+      .guide-card { flex-direction: column; padding: 28px; gap: 16px; border-left: none; border-top: 4px solid #006400; }
+      .step-icon { width: 48px; height: 48px; font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="Images/Logo.png" alt="Logo"/>
+      <span class="nav-logo-wordmark">Second<em>hand</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="Market.html">Market</a></li>
+      <li><a href="Polls.html">Polls</a></li>
+      <li><a href="AboutUs.html">About Us</a></li>
+      <li><a href="Guide.html" class="active">Guide</a></li>
+    </ul>
+  </nav>
+
+  <hr class="shadow-line">
+
+  <!-- Guide Content -->
+  <div class="guide-wrapper">
+    <div class="guide-header">
+      <h1>How It Works</h1>
+      <p>A quick guide to navigating, trading, and engaging with the Secondhand community.</p>
+    </div>
+
+    <div class="guide-list">
+      
+      <!-- Step 1 -->
+      <div class="guide-card">
+        <div class="step-icon">🔍</div>
+        <div class="step-content">
+          <h3>Browsing the Marketplace</h3>
+          <p>Navigate to the <strong>Market</strong> page to view all available listings. Use the search bar at the top to quickly find specific items by title, category, or description.</p>
+          <p>Keep an eye out for colored tags on the listings: 
+             <span class="inline-badge badge-sale">Sale</span> indicates items to purchase, 
+             <span class="inline-badge badge-free">Free</span> means the item is completely free to take, and 
+             <span class="inline-badge badge-borrow">Borrow</span> means the item is available for temporary loan (great for expensive, one-time use tools).</p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="guide-card">
+        <div class="step-icon">📸</div>
+        <div class="step-content">
+          <h3>Listing an Item</h3>
+          <p>Have an item gathering dust? Click the green <strong>"＋ List an Item"</strong> button on the Market page. Fill out the details such as Title, Category, and Condition.</p>
+          <p>You can upload up to 5 photos to showcase your item. Don't forget to set your listing type (Sale, Free, or Borrow) and include clear contact instructions and pickup locations in your description.</p>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="guide-card">
+        <div class="step-icon">✉️</div>
+        <div class="step-content">
+          <h3>Contacting and Commenting</h3>
+          <p>Click on any item card to open its detailed view. If you are interested, use the <strong>"Contact Seller"</strong> button to immediately initiate an email or phone call with the owner based on their provided contact info.</p>
+          <p>Have a general question about dimensions or condition? Scroll to the bottom of the item details and leave a public <strong>Comment</strong> for the seller to answer.</p>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="guide-card">
+        <div class="step-icon">📊</div>
+        <div class="step-content">
+          <h3>Community Polls</h3>
+          <p>We want the marketplace to work for you. Navigate to the <strong>Polls</strong> tab to see what items or features the community is looking for.</p>
+          <p>You can vote on active polls, comment your thoughts, or click <strong>"＋ Create Poll"</strong> to ask the community a question of your own (e.g., "Would anyone be interested in a community lawnmower pool?"). You can provide up to 6 custom options for people to vote on.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
