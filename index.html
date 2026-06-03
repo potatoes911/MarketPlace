@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secondhand - One man's trash is another man's treasure</title>
   <link rel="stylesheet" href="Test.css">
 
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
       background-color: #f7f9fc;
       color: #333;
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-
-    /* ══════════════════════════════════
-       TOP NAVIGATION — complete overhaul
-       ══════════════════════════════════ */
 
     nav {
       display: flex;
@@ -43,7 +47,6 @@
     .nav-logo img {
       height: 36px;
       width: auto;
-      filter: brightness(0) invert(1);
       opacity: 0.92;
     }
 
@@ -122,85 +125,104 @@
       .nav-links li a { padding: 7px 11px; font-size: 12px; letter-spacing: 0.04em; }
     }
 
+    /* ══════════════════════════════════
+       HERO SECTION
+       ══════════════════════════════════ */
+
     .hero-section {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 60px 40px;
-      gap: 40px;
+      max-width: 1300px;
+      margin: 40px auto 0;
+      padding: 40px;
+      gap: 50px;
     }
 
     .text-content {
       flex: 1;
-      max-width: 550px;
+      max-width: 580px;
     }
 
     .text-content h1 {
-      font-size: clamp(24px, 3vw, 42px);
-      line-height: 1.2;
-      margin-bottom: 20px;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 48px);
+      line-height: 1.15;
+      margin-bottom: 24px;
       color: #1a1a1a;
     }
 
     .text-content p {
-      font-size: clamp(14px, 1.5vw, 18px);
-      line-height: 1.6;
+      font-size: clamp(15px, 1.5vw, 17px);
+      line-height: 1.7;
       color: #555;
-      margin-bottom: 30px;
+      margin-bottom: 36px;
     }
 
     .buttons {
       display: flex;
-      gap: 15px;
+      gap: 16px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .btn {
-      padding: 12px 24px;
-      border-radius: 8px;
+      padding: 14px 28px;
+      border-radius: 10px;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      border: none;
+      font-weight: 500;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.25s ease;
+      border: 2px solid transparent;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn-primary {
-      background-color: #0061fe;
+      background-color: #006400;
       color: white;
+      box-shadow: 0 4px 14px rgba(0,100,0,0.2);
     }
 
     .btn-primary:hover {
-      background-color: #043075;
+      background-color: #004d00;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,100,0,0.25);
     }
 
     .btn-secondary {
       background-color: transparent;
-      color: #333;
+      color: #006400;
+      border-color: #006400;
     }
 
     .btn-secondary:hover {
-      background-color: #14b8e0;
+      background-color: #f0f8f0;
+      transform: translateY(-2px);
     }
+
+    /* ══════════════════════════════════
+       SLIDESHOW
+       ══════════════════════════════════ */
 
     .slideshow-wrapper {
       flex: 1;
       display: flex;
       justify-content: center;
+      width: 100%;
     }
 
     .slideshow-container {
       width: 100%;
-      max-width: 600px;
+      max-width: 650px;
       position: relative;
-      border: 5px solid #ffffff;
-      border-radius: 12px;
+      border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      background-color: #000;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      background-color: #e4e8ee;
     }
 
     .mySlides {
@@ -209,20 +231,20 @@
 
     .mySlides img {
       width: 100%;
-      height: auto;
-      aspect-ratio: 16 / 9;
+      height: 100%;
+      aspect-ratio: 4 / 3;
       object-fit: cover;
       display: block;
     }
 
     .fade {
       animation-name: fade;
-      animation-duration: 1s;
+      animation-duration: 1.2s;
     }
 
     @keyframes fade {
-      from { opacity: 0.4; }
-      to { opacity: 1; }
+      from { opacity: 0.5; transform: scale(1.02); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .prev, .next {
@@ -230,57 +252,93 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      padding: 16px;
-      color: rgb(255, 255, 255);
+      padding: 14px 18px;
+      color: white;
       font-weight: bold;
-      font-size: 18px;
+      font-size: 20px;
       transition: 0.3s ease;
-      background-color: rgba(0,0,0,0.3);
+      background-color: rgba(0,0,0,0.4);
       user-select: none;
       text-decoration: none;
+      backdrop-filter: blur(4px);
     }
 
-    .next { right: 0; }
-    .prev { left: 0; }
+    .next { right: 0; border-radius: 8px 0 0 8px; }
+    .prev { left: 0; border-radius: 0 8px 8px 0; }
 
     .prev:hover, .next:hover {
-      background-color: rgba(0,0,0,0.8);
+      background-color: rgba(0,100,0,0.8);
     }
 
-    @media (max-width: 900px) {
+    /* ══════════════════════════════════
+       INFO / FEATURES SECTION
+       ══════════════════════════════════ */
+
+    .info-section {
+      max-width: 1300px;
+      margin: 40px auto 80px;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .info-card {
+      background: #fff;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      border-top: 3px solid #006400;
+      transition: transform 0.25s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .info-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      background: #e8f5e8;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .info-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+      color: #1a1a1a;
+      margin-bottom: 12px;
+    }
+
+    .info-card p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 950px) {
       .hero-section {
         flex-direction: column;
         text-align: center;
         padding: 40px 20px;
+        gap: 40px;
       }
-
-      .text-content {
-        max-width: 100%;
-      }
-
-      .buttons {
-        justify-content: center;
-      }
-
-      .slideshow-container {
-        max-width: 100%;
-      }
-    }
-
-    @media (min-width: 1400px) {
-      .hero-section {
-        padding: 80px 60px;
-      }
-
-      .slideshow-container {
-        max-width: 750px;
-      }
+      .text-content { max-width: 100%; }
+      .buttons { justify-content: center; }
+      .info-section { grid-template-columns: 1fr; padding: 0 20px; }
+      .info-card { text-align: left; }
     }
   </style>
 </head>
 <body>
 
-    <!-- Nav -->
+  <!-- Nav -->
   <nav>
     <a href="index.html" class="nav-logo">
       <img src="Images/Logo.png" alt="Logo"/>
@@ -298,23 +356,24 @@
   <section class="hero-section">
     <div class="text-content">
       <h1>One man's trash is another man's treasure.</h1>
-      <p>Explore a wide variety of tools, furniture and household items at unbeatable prices.</p>
+      <p>Give your old items a new life and discover incredible finds. Explore a wide variety of tools, furniture, and household items at unbeatable prices, available to purchase, rent, or take for free.</p>
       <div class="buttons">
-        <a href="#" class="btn btn-primary">Start Browsing</a>
-        <a href="#" class="btn btn-secondary">Create Account ➔</a>
+        <a href="Market.html" class="btn btn-primary">Start Browsing</a>
+        <a href="AboutUs.html" class="btn btn-secondary">Learn Our Story ➔</a>
       </div>
     </div>
 
     <div class="slideshow-wrapper">
       <div class="slideshow-container">
+        <!-- Make sure these image paths match your actual folders -->
         <div class="mySlides fade">
-          <img src="Images/Forest1.png" alt="Slide 1">
+          <img src="Images/Forest1.png" alt="Nature and sustainability">
         </div>
         <div class="mySlides fade">
-          <img src="Images/mower.jpg" alt="Slide 2">
+          <img src="Images/mower.jpg" alt="Secondhand lawn mower">
         </div>
         <div class="mySlides fade">
-          <img src="Images/sofa1.png" alt="Slide 3">
+          <img src="Images/sofa1.png" alt="Used furniture sofa">
         </div>
 
         <a class="prev" href="javascript:void(0)" onclick="plusSlides(-1)">❮</a>
@@ -323,10 +382,30 @@
     </div>
   </section>
 
+  <!-- Features Section based on project context -->
+  <section class="info-section">
+    <div class="info-card">
+      <div class="info-icon">♻️</div>
+      <h3>Reduce Landfill Waste</h3>
+      <p>Countless items that are no longer valued are binned every day. Our marketplace helps you clear out the clutter gathering dust, giving perfectly good items a second life instead of sending them to landfill.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🏠</div>
+      <h3>Perfect for New Homes</h3>
+      <p>Moving into a new home is expensive. We help new homeowners find appliances, furniture, and household goods that are incredibly cheap (or even free!) and still in fantastic condition.</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🛠️</div>
+      <h3>Rent and Share Equipment</h3>
+      <p>Need an expensive hand drill or tool for a one-time use? Purchasing it brand new isn't viable. Secondhand allows individuals to lease and share equipment safely within the community.</p>
+    </div>
+  </section>
+
   <script>
     let slideIndex = 0;
     let slideTimer;
 
+    // Initialize slideshow
     showSlides();
     resetTimer();
 
@@ -338,9 +417,14 @@
 
     function showSlides() {
       let slides = document.getElementsByClassName("mySlides");
+      if (!slides.length) return; // safeguard if images don't load
+      
       if (slideIndex >= slides.length) { slideIndex = 0; }
       if (slideIndex < 0) { slideIndex = slides.length - 1; }
-      for (let slide of slides) { slide.style.display = "none"; }
+      
+      for (let slide of slides) { 
+        slide.style.display = "none"; 
+      }
       slides[slideIndex].style.display = "block";
     }
 
@@ -349,7 +433,7 @@
       slideTimer = setInterval(() => {
         slideIndex++;
         showSlides();
-      }, 4000);
+      }, 5000); // slightly slower interval (5 seconds) for a calmer reading experience
     }
   </script>
 
